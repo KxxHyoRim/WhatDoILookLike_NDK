@@ -27,7 +27,6 @@ using namespace dlib;
 
 
 float resize(Mat img_src, Mat &img_resize, int resize_width){
-
     float scale = resize_width / (float)img_src.cols ;
     if (img_src.cols > resize_width) {
         int new_height = cvRound(img_src.rows * scale);

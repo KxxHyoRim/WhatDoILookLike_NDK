@@ -369,8 +369,8 @@ public class MainActivity extends AppCompatActivity implements CameraBridgeViewB
             handler.sendMessage(msg);
 
             Imgproc.resize(save_mat, save_mat, new Size(50, 50));
-            detectDlib(dlib_detector, dlib_shapePredictor,
-                    save_mat.getNativeObjAddr(), result);
+//            detectDlib(dlib_detector, dlib_shapePredictor,
+//                    save_mat.getNativeObjAddr(), result);
         }
 
         return take_image;
@@ -449,7 +449,7 @@ public class MainActivity extends AppCompatActivity implements CameraBridgeViewB
                 cameraBridgeViewBase.setCameraPermissionGranted();
 
                 read_cascade_file();
-                read_dlib_detector_file();
+                //read_dlib_detector_file();
             }
         }
     }

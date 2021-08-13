@@ -6,8 +6,8 @@
 6
 7    <uses-sdk
 8        android:minSdkVersion="21"
-8-->D:\study\Android\WhatDoILookLike_NDK_lib\sdk\java\AndroidManifest.xml
+8-->C:\Users\Administrator\AndroidStudioProjects\WhatDoILookLike_NDK_New\sdk\java\AndroidManifest.xml
 9        android:targetSdkVersion="26" />
-9-->D:\study\Android\WhatDoILookLike_NDK_lib\sdk\java\AndroidManifest.xml
+9-->C:\Users\Administrator\AndroidStudioProjects\WhatDoILookLike_NDK_New\sdk\java\AndroidManifest.xml
 10
 11</manifest>

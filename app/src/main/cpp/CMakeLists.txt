@@ -5,7 +5,7 @@
 
 cmake_minimum_required(VERSION 3.4.1)
 
-set(pathPROJECT "D:/study/Android/WhatDoILookLike_NDK_lib") # 수정필요
+set(pathPROJECT "C:/Users/Administrator/AndroidStudioProjects/WhatDoILookLike_NDK_New") # 수정필요
 set(pathOPENCV ${pathPROJECT}/sdk)
 set(pathLIBOPENCV_JAVA ${pathOPENCV}/native/libs/${ANDROID_ABI}/libopencv_java4.so)
 
