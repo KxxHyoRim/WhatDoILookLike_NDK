@@ -57,9 +57,7 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
-public class MainActivity extends AppCompatActivity implements CameraBridgeViewBase.CvCameraViewListener2{
-
-
+public class MainActivity extends AppCompatActivity implements CameraBridgeViewBase.CvCameraViewListener2 {
     private static final String TAG="Camera";
 
     private Mat mRgba;
@@ -82,7 +80,13 @@ public class MainActivity extends AppCompatActivity implements CameraBridgeViewB
 
     public native long loadCascade(String cascadeFileName);
     public native void detect(long cascadeClassifier_face, long matAddrInput, long matAddrResult, long nativeObjAddr);
+    public native long loadDlibDetector();
+    public native long loadDlibShapePredictor();
+    public native void detectDlib(long dlib_shapePredictor, long dlib_detector,
+                                  long matAddrInput, int faceResult);
     public long cascadeClassifier_face=0;
+    public long dlib_detector=0;
+    public long dlib_shapePredictor=0;
 
 
     /** 전면카메라로 시작
@@ -93,6 +97,7 @@ public class MainActivity extends AppCompatActivity implements CameraBridgeViewB
     static {
         System.loadLibrary("opencv_java4");
         System.loadLibrary("native-lib");
+        System.loadLibrary("dlib");
     }
 
 
@@ -228,21 +233,18 @@ public class MainActivity extends AppCompatActivity implements CameraBridgeViewB
         if(mOpenCvCameraView !=null){
             mOpenCvCameraView.disableView();
         }
-
     }
 
     public void onCameraViewStarted(int width ,int height){
         mRgba=new Mat(height,width, CvType.CV_8UC4);
         mGray =new Mat(height,width,CvType.CV_8UC1);
-
-
     }
+
     public void onCameraViewStopped() {
         mRgba.release();
     }
 
     public Mat onCameraFrame(CameraBridgeViewBase.CvCameraViewFrame inputFrame){
-
         mRgba=inputFrame.rgba();
         mGray=inputFrame.gray();
         inputMat=mRgba.clone();
@@ -255,6 +257,7 @@ public class MainActivity extends AppCompatActivity implements CameraBridgeViewB
             Core.flip(mRgba, mRgba, 0);
             Core.flip(mGray, mGray, 0);
         }
+
         detect(cascadeClassifier_face, mRgba.getNativeObjAddr(), mRgba.getNativeObjAddr(), inputMat.getNativeObjAddr());
         take_image = take_picture_function_rgb(take_image, mRgba);
 
@@ -288,7 +291,6 @@ public class MainActivity extends AppCompatActivity implements CameraBridgeViewB
         } catch (Exception e) {
             Log.d(TAG, "copyFile :: 파일 복사 중 예외 발생 "+e.toString() );
         }
-
     }
 
     private void read_cascade_file(){
@@ -299,6 +301,13 @@ public class MainActivity extends AppCompatActivity implements CameraBridgeViewB
         //loadCascade 메소드는 외부 저장소의 특정 위치에서 해당 파일을 읽어와서 CascadeClassifier 객체로 로드함
         cascadeClassifier_face = loadCascade("haarcascade_frontalface_alt.xml");
         Log.d(TAG,"read_cascade_file:");
+    }
+
+    private void read_dlib_detector_file(){
+        copyFile("shape_predictor_68_face_landmarks.dat");
+        dlib_detector = loadDlibDetector();
+        dlib_shapePredictor = loadDlibShapePredictor();
+        Log.d(TAG,"read_dlib_file done");
     }
 
     private int take_picture_function_rgb(int take_image, Mat mRgba) {
@@ -338,10 +347,11 @@ public class MainActivity extends AppCompatActivity implements CameraBridgeViewB
             take_image = 0;
         }
 
-        if(inputMat.empty()){
+        if (inputMat.empty()) {
             Log.e(TAG, "얼굴 검출이 되지 않음!");
         }
-        else{
+
+        else {
             int result = doInference(inputMat);
             Log.e(TAG, "crop 후 input image 사이즈:" + inputMat.width() +" * " +inputMat.height());
 
@@ -355,7 +365,12 @@ public class MainActivity extends AppCompatActivity implements CameraBridgeViewB
             else if(result == 1.0){ msg.what = DOG ;}
             else if(result == 2.0){ msg.what = FOX ;}
             else if (result == -1.0){ msg.what = ETC ;}
+
             handler.sendMessage(msg);
+
+            Imgproc.resize(save_mat, save_mat, new Size(50, 50));
+            detectDlib(dlib_detector, dlib_shapePredictor,
+                    save_mat.getNativeObjAddr(), result);
         }
 
         return take_image;
@@ -420,8 +435,6 @@ public class MainActivity extends AppCompatActivity implements CameraBridgeViewB
         return Collections.singletonList(mOpenCvCameraView);
     }
 
-
-
     //여기서부턴 퍼미션 관련 메소드
     private static final int CAMERA_PERMISSION_REQUEST_CODE = 200;
 
@@ -436,6 +449,7 @@ public class MainActivity extends AppCompatActivity implements CameraBridgeViewB
                 cameraBridgeViewBase.setCameraPermissionGranted();
 
                 read_cascade_file();
+                read_dlib_detector_file();
             }
         }
     }

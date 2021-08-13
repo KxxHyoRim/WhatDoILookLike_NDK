@@ -1,0 +1,8 @@
+libdir=C:/dlib-native/lib
+includedir=C:/dlib-native/include
+
+Name: dlib
+Description: Numerical and networking C++ library
+Version: 19.20.0
+Libs: -L${libdir} -ldlib 
+Cflags: -I${includedir} 

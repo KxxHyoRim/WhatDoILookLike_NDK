@@ -5,7 +5,19 @@ plugins {
 android {
     compileSdkVersion 30
     buildToolsVersion "30.0.0"
-
+    packagingOptions {
+        pickFirst 'lib/arm64-v8a/libdlib.so'
+        pickFirst 'lib/x86/libassmidi.so'
+        exclude 'META-INF/DEPENDENCIES'
+        exclude 'META-INF/LICENSE'
+        exclude 'META-INF/LICENSE.txt'
+        exclude 'META-INF/license.txt'
+        exclude 'META-INF/NOTICE'
+        exclude 'META-INF/NOTICE.txt'
+        exclude 'META-INF/notice.txt'
+        exclude 'META-INF/ASL2.0'
+        exclude("META-INF/*.kotlin_module")
+    }
     defaultConfig {
         applicationId "com.sungshin.whatdoilooklike"
         minSdkVersion 21
@@ -16,8 +28,12 @@ android {
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         externalNativeBuild {
             cmake {
-                cppFlags ""
+                arguments "-DANDROID_STL=c++_shared" , "-DANDROID_TOOLCHAIN=clang"
+                cppFlags "-std=c++11 -fexceptions"
             }
+        }
+        ndk {
+            abiFilters "arm64-v8a"
         }
     }
 
@@ -25,6 +41,7 @@ android {
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+            signingConfig signingConfigs.debug
         }
     }
     externalNativeBuild {
