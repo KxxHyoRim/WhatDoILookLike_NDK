@@ -38,11 +38,14 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.WhatDoILookLike">
 
-        <activity android:name=".LoadCameraActivity">
+        <activity android:name=".LoadCameraActivity"
+            android:theme="@style/Theme.Design.NoActionBar">
             <!--android:screenOrientation="portrait"-->
             <!--android:configChanges="keyboardHidden|orientation">-->
-
         </activity>
+
+        <activity android:name=".MainActivity"
+            android:theme="@style/Theme.Design.NoActionBar"/>
 
         <activity
             android:name=".SplashActivity"
