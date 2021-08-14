@@ -12,7 +12,6 @@ import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.pm.PackageManager;
 import android.content.res.AssetFileDescriptor;
-import android.content.res.AssetManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
@@ -28,7 +27,6 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 import static android.Manifest.permission.CAMERA;
-import static android.Manifest.permission.WRITE_EXTERNAL_STORAGE;
 
 
 import org.opencv.android.BaseLoaderCallback;
@@ -45,10 +43,7 @@ import org.tensorflow.lite.Interpreter;
 
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
 import java.nio.MappedByteBuffer;
 import java.nio.channels.FileChannel;
 import java.text.DecimalFormat;
@@ -57,12 +52,13 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
-public class MainActivity extends AppCompatActivity implements CameraBridgeViewBase.CvCameraViewListener2 {
+public class MainActivity extends AppCompatActivity implements CameraBridgeViewBase.CvCameraViewListener2{
+
+
     private static final String TAG="Camera";
 
     private Mat mRgba;
     private Mat mGray;
-    private Mat inputMat;
     private CameraBridgeViewBase mOpenCvCameraView;
     private ImageView flip_camera;     // call for image view of flip button
     private int mCameraId = 1;         // start with front camera // 0 : back, 1 : front
@@ -78,16 +74,6 @@ public class MainActivity extends AppCompatActivity implements CameraBridgeViewB
     private final int ETC = 3;  // 결과 없음
     static private final String[] animal = {"고양이", "강아지", "여우", "결과없음"};
 
-    public native long loadCascade(String cascadeFileName);
-    public native void detect(long cascadeClassifier_face, long matAddrInput, long matAddrResult, long nativeObjAddr);
-    public native long loadDlibDetector();
-    public native long loadDlibShapePredictor();
-    public native void detectDlib(long dlib_shapePredictor, long dlib_detector,
-                                  long matAddrInput, int faceResult);
-    public long cascadeClassifier_face=0;
-    public long dlib_detector=0;
-    public long dlib_shapePredictor=0;
-
 
     /** 전면카메라로 시작
      *  후면카메라로 시작하고 싶을 시 상단의 mCameraId = 0으로 설정하면됨 */
@@ -97,7 +83,6 @@ public class MainActivity extends AppCompatActivity implements CameraBridgeViewB
     static {
         System.loadLibrary("opencv_java4");
         System.loadLibrary("native-lib");
-        System.loadLibrary("dlib");
     }
 
 
@@ -154,7 +139,7 @@ public class MainActivity extends AppCompatActivity implements CameraBridgeViewB
         // 3. Allocate Instance
         interpreter = getTfliteInterpreter("converted_model.tflite");
         textView = (TextView) findViewById(R.id.textView);
-        mOpenCvCameraView=(CameraBridgeViewBase)findViewById(R.id.frame_Surface);
+        mOpenCvCameraView=(CameraBridgeViewBase) findViewById(R.id.frame_Surface);
         mOpenCvCameraView.setVisibility(SurfaceView.VISIBLE);
         mOpenCvCameraView.setCvCameraViewListener(this);
 //        Log.i(TAG,"mOpenCvCameraView :: " +  mOpenCvCameraView.getWidth() + ", "+ mOpenCvCameraView.getHeight());
@@ -233,21 +218,23 @@ public class MainActivity extends AppCompatActivity implements CameraBridgeViewB
         if(mOpenCvCameraView !=null){
             mOpenCvCameraView.disableView();
         }
+
     }
 
     public void onCameraViewStarted(int width ,int height){
         mRgba=new Mat(height,width, CvType.CV_8UC4);
         mGray =new Mat(height,width,CvType.CV_8UC1);
-    }
 
+
+    }
     public void onCameraViewStopped() {
         mRgba.release();
     }
 
     public Mat onCameraFrame(CameraBridgeViewBase.CvCameraViewFrame inputFrame){
+
         mRgba=inputFrame.rgba();
         mGray=inputFrame.gray();
-        inputMat=mRgba.clone();
 
         if (mCameraId == 1){    // front camera
             // rotate camera frame with 180 degree
@@ -258,56 +245,9 @@ public class MainActivity extends AppCompatActivity implements CameraBridgeViewB
             Core.flip(mGray, mGray, 0);
         }
 
-        detect(cascadeClassifier_face, mRgba.getNativeObjAddr(), mRgba.getNativeObjAddr(), inputMat.getNativeObjAddr());
         take_image = take_picture_function_rgb(take_image, mRgba);
 
         return mRgba;
-    }
-
-    private void copyFile(String filename) {
-        String baseDir = Environment.getExternalStorageDirectory().getPath();
-        String pathDir = baseDir + File.separator + filename;
-
-        AssetManager assetManager = this.getAssets();
-
-        InputStream inputStream = null;
-        OutputStream outputStream = null;
-
-        try {
-            Log.d( TAG, "copyFile :: 다음 경로로 파일복사 "+ pathDir);
-            inputStream = assetManager.open(filename);
-            outputStream = new FileOutputStream(pathDir);
-
-            byte[] buffer = new byte[1024];
-            int read;
-            while ((read = inputStream.read(buffer)) != -1) {
-                outputStream.write(buffer, 0, read);
-            }
-            inputStream.close();
-            inputStream = null;
-            outputStream.flush();
-            outputStream.close();
-            outputStream = null;
-        } catch (Exception e) {
-            Log.d(TAG, "copyFile :: 파일 복사 중 예외 발생 "+e.toString() );
-        }
-    }
-
-    private void read_cascade_file(){
-        //copyFile메소드는 assets에서 해당 파일을 가져와 외부 저장소 특정 위치에 저장하도록 구현된 메소드
-        copyFile("haarcascade_frontalface_alt.xml");
-        Log.d(TAG,"Read_cascade_file");
-
-        //loadCascade 메소드는 외부 저장소의 특정 위치에서 해당 파일을 읽어와서 CascadeClassifier 객체로 로드함
-        cascadeClassifier_face = loadCascade("haarcascade_frontalface_alt.xml");
-        Log.d(TAG,"read_cascade_file:");
-    }
-
-    private void read_dlib_detector_file(){
-        copyFile("shape_predictor_68_face_landmarks.dat");
-        dlib_detector = loadDlibDetector();
-        dlib_shapePredictor = loadDlibShapePredictor();
-        Log.d(TAG,"read_dlib_file done");
     }
 
     private int take_picture_function_rgb(int take_image, Mat mRgba) {
@@ -347,31 +287,20 @@ public class MainActivity extends AppCompatActivity implements CameraBridgeViewB
             take_image = 0;
         }
 
-        if (inputMat.empty()) {
-            Log.e(TAG, "얼굴 검출이 되지 않음!");
-        }
+        int result = doInference(save_mat);
 
-        else {
-            int result = doInference(inputMat);
-            Log.e(TAG, "crop 후 input image 사이즈:" + inputMat.width() +" * " +inputMat.height());
+        Message msg = handler.obtainMessage();
 
-            Message msg = handler.obtainMessage();
+        /** Category 추가 방법
+         * 1. animal 이름의 배열 수정 : 결과 없음은 마지막 인덱스로 지정
+         * 2. 바로 아래의 else if 문 추가
+         * */
+        if(result == 0.0){  msg.what = CAT ; }
+        else if(result == 1.0){ msg.what = DOG ;}
+        else if(result == 2.0){ msg.what = FOX ;}
+        else if (result == -1.0){ msg.what = ETC ;}
+        handler.sendMessage(msg);
 
-            /** Category 추가 방법
-             * 1. animal 이름의 배열 수정 : 결과 없음은 마지막 인덱스로 지정
-             * 2. 바로 아래의 else if 문 추가
-             * */
-            if(result == 0.0){  msg.what = CAT ; }
-            else if(result == 1.0){ msg.what = DOG ;}
-            else if(result == 2.0){ msg.what = FOX ;}
-            else if (result == -1.0){ msg.what = ETC ;}
-
-            handler.sendMessage(msg);
-
-            Imgproc.resize(save_mat, save_mat, new Size(50, 50));
-//            detectDlib(dlib_detector, dlib_shapePredictor,
-//                    save_mat.getNativeObjAddr(), result);
-        }
 
         return take_image;
     }
@@ -435,6 +364,8 @@ public class MainActivity extends AppCompatActivity implements CameraBridgeViewB
         return Collections.singletonList(mOpenCvCameraView);
     }
 
+
+
     //여기서부턴 퍼미션 관련 메소드
     private static final int CAMERA_PERMISSION_REQUEST_CODE = 200;
 
@@ -447,9 +378,6 @@ public class MainActivity extends AppCompatActivity implements CameraBridgeViewB
         for (CameraBridgeViewBase cameraBridgeViewBase: cameraViews) {
             if (cameraBridgeViewBase != null) {
                 cameraBridgeViewBase.setCameraPermissionGranted();
-
-                read_cascade_file();
-                //read_dlib_detector_file();
             }
         }
     }
@@ -459,8 +387,8 @@ public class MainActivity extends AppCompatActivity implements CameraBridgeViewB
         super.onStart();
         boolean havePermission = true;
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            if (checkSelfPermission(CAMERA) != PackageManager.PERMISSION_GRANTED || checkSelfPermission(WRITE_EXTERNAL_STORAGE)!=PackageManager.PERMISSION_GRANTED) {
-                requestPermissions(new String[]{CAMERA, WRITE_EXTERNAL_STORAGE}, CAMERA_PERMISSION_REQUEST_CODE);
+            if (checkSelfPermission(CAMERA) != PackageManager.PERMISSION_GRANTED) {
+                requestPermissions(new String[]{CAMERA}, CAMERA_PERMISSION_REQUEST_CODE);
                 havePermission = false;
             }
         }
@@ -473,7 +401,7 @@ public class MainActivity extends AppCompatActivity implements CameraBridgeViewB
     @TargetApi(Build.VERSION_CODES.M)
     public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
         if (requestCode == CAMERA_PERMISSION_REQUEST_CODE && grantResults.length > 0
-                && grantResults[0] == PackageManager.PERMISSION_GRANTED && grantResults[1]==PackageManager.PERMISSION_GRANTED) {
+                && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
             onCameraPermissionGranted();
         }else{
             showDialogForPermission("앱을 실행하려면 퍼미션을 허가하셔야합니다.");
@@ -491,7 +419,7 @@ public class MainActivity extends AppCompatActivity implements CameraBridgeViewB
         builder.setCancelable(false);
         builder.setPositiveButton("예", new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int id){
-                requestPermissions(new String[]{CAMERA, WRITE_EXTERNAL_STORAGE}, CAMERA_PERMISSION_REQUEST_CODE);
+                requestPermissions(new String[]{CAMERA}, CAMERA_PERMISSION_REQUEST_CODE);
             }
         });
         builder.setNegativeButton("아니오", new DialogInterface.OnClickListener() {
@@ -501,6 +429,7 @@ public class MainActivity extends AppCompatActivity implements CameraBridgeViewB
         });
         builder.create().show();
     }
+
 
 }
 
