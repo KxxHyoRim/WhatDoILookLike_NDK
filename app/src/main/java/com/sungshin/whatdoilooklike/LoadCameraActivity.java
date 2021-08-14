@@ -57,7 +57,7 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
-public class MainActivity extends AppCompatActivity implements CameraBridgeViewBase.CvCameraViewListener2{
+public class LoadCameraActivity extends AppCompatActivity implements CameraBridgeViewBase.CvCameraViewListener2{
 
 
     private static final String TAG="Camera";
@@ -115,7 +115,7 @@ public class MainActivity extends AppCompatActivity implements CameraBridgeViewB
     };
 
 
-    public MainActivity(){
+    public LoadCameraActivity(){
         Log.i(TAG,"Instantiated new "+this.getClass());
     }
 
@@ -130,23 +130,23 @@ public class MainActivity extends AppCompatActivity implements CameraBridgeViewB
         // 1. if camera permission is not given it will ask for it on device
         int MY_PERMISSIONS_REQUEST_CAMERA=0;
 
-        if (ContextCompat.checkSelfPermission(MainActivity.this, Manifest.permission.CAMERA)
+        if (ContextCompat.checkSelfPermission(LoadCameraActivity.this, Manifest.permission.CAMERA)
                 == PackageManager.PERMISSION_DENIED){
-            ActivityCompat.requestPermissions(MainActivity.this, new String[] {Manifest.permission.CAMERA}, MY_PERMISSIONS_REQUEST_CAMERA);
+            ActivityCompat.requestPermissions(LoadCameraActivity.this, new String[] {Manifest.permission.CAMERA}, MY_PERMISSIONS_REQUEST_CAMERA);
         }
 
-        if (ContextCompat.checkSelfPermission(MainActivity.this, Manifest.permission.WRITE_EXTERNAL_STORAGE)
+        if (ContextCompat.checkSelfPermission(LoadCameraActivity.this, Manifest.permission.WRITE_EXTERNAL_STORAGE)
                 == PackageManager.PERMISSION_DENIED){
-            ActivityCompat.requestPermissions(MainActivity.this, new String[] {Manifest.permission.WRITE_EXTERNAL_STORAGE}, MY_PERMISSIONS_REQUEST_CAMERA);
+            ActivityCompat.requestPermissions(LoadCameraActivity.this, new String[] {Manifest.permission.WRITE_EXTERNAL_STORAGE}, MY_PERMISSIONS_REQUEST_CAMERA);
         }
 
-        if (ContextCompat.checkSelfPermission(MainActivity.this, Manifest.permission.READ_EXTERNAL_STORAGE)
+        if (ContextCompat.checkSelfPermission(LoadCameraActivity.this, Manifest.permission.READ_EXTERNAL_STORAGE)
                 == PackageManager.PERMISSION_DENIED){
-            ActivityCompat.requestPermissions(MainActivity.this, new String[] {Manifest.permission.READ_EXTERNAL_STORAGE}, MY_PERMISSIONS_REQUEST_CAMERA);
+            ActivityCompat.requestPermissions(LoadCameraActivity.this, new String[] {Manifest.permission.READ_EXTERNAL_STORAGE}, MY_PERMISSIONS_REQUEST_CAMERA);
         }
 
         // 2. SetContentView
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.activity_camera);
 
 
         // 3. Allocate Instance
@@ -494,7 +494,7 @@ public class MainActivity extends AppCompatActivity implements CameraBridgeViewB
     @TargetApi(Build.VERSION_CODES.M)
     private void showDialogForPermission(String msg) {
 
-        AlertDialog.Builder builder = new AlertDialog.Builder( MainActivity.this);
+        AlertDialog.Builder builder = new AlertDialog.Builder( LoadCameraActivity.this);
         builder.setTitle("알림");
         builder.setMessage(msg);
         builder.setCancelable(false);

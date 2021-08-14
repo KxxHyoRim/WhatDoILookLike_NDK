@@ -39,7 +39,7 @@ Java_com_sungshin_whatdoilooklike_MainActivity_stringFromJNI(
 
 extern "C"
 JNIEXPORT jlong JNICALL
-Java_com_sungshin_whatdoilooklike_MainActivity_loadCascade(JNIEnv *env, jobject thiz, jstring cascade_file_name) {
+Java_com_sungshin_whatdoilooklike_LoadCameraActivity_loadCascade(JNIEnv *env, jobject thiz, jstring cascade_file_name) {
     // TODO: implement loadCascade()
     const char *nativeFileNameString = env->GetStringUTFChars(cascade_file_name, 0);
 
@@ -63,10 +63,10 @@ Java_com_sungshin_whatdoilooklike_MainActivity_loadCascade(JNIEnv *env, jobject 
 
 extern "C"
 JNIEXPORT void JNICALL
-Java_com_sungshin_whatdoilooklike_MainActivity_detect(JNIEnv *env, jobject thiz,
-                                                      jlong cascade_classifier_face,
-                                                      jlong mat_addr_input, jlong mat_addr_result,
-                                                      jlong mat_addr_crop) {
+Java_com_sungshin_whatdoilooklike_LoadCameraActivity_detect(JNIEnv *env, jobject thiz,
+                                                            jlong cascade_classifier_face,
+                                                            jlong mat_addr_input, jlong mat_addr_result,
+                                                            jlong mat_addr_crop) {
     // TODO: implement detect()
      Mat &img_input = *(Mat *) mat_addr_input;
     Mat &img_result = *(Mat *) mat_addr_result;
