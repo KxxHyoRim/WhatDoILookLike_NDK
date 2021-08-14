@@ -65,6 +65,9 @@ public class MainActivity extends AppCompatActivity implements CameraBridgeViewB
     private Mat mRgba;
     private Mat mGray;
     private Mat inputMat;
+    private Mat mRotate;
+    private Mat rotateInputMat;
+
     private CameraBridgeViewBase mOpenCvCameraView;
     private ImageView flip_camera;     // call for image view of flip button
     private int mCameraId = 1;         // start with front camera // 0 : back, 1 : front
@@ -232,8 +235,9 @@ public class MainActivity extends AppCompatActivity implements CameraBridgeViewB
     }
 
     public void onCameraViewStarted(int width ,int height){
-        mRgba=new Mat(height,width, CvType.CV_8UC4);
-        mGray =new Mat(height,width,CvType.CV_8UC1);
+        mRgba   = new Mat(height,width, CvType.CV_8UC4);
+        mGray   = new Mat(height,width,CvType.CV_8UC1);
+        mRotate = new Mat(height,width, CvType.CV_8UC4);
 
 
     }
@@ -245,7 +249,12 @@ public class MainActivity extends AppCompatActivity implements CameraBridgeViewB
 
         mRgba=inputFrame.rgba();
         mGray=inputFrame.gray();
+        mRotate = inputFrame.rgba();
         inputMat=mRgba.clone();
+        rotateInputMat = mRotate.clone();
+
+
+
 
         if (mCameraId == 1){    // front camera
             // rotate camera frame with 180 degree
@@ -255,7 +264,21 @@ public class MainActivity extends AppCompatActivity implements CameraBridgeViewB
             Core.flip(mRgba, mRgba, 0);
             Core.flip(mGray, mGray, 0);
         }
-        detect(cascadeClassifier_face, mRgba.getNativeObjAddr(), mRgba.getNativeObjAddr(), inputMat.getNativeObjAddr());
+
+
+        if (mCameraId == 1) {    // front camera
+            Core.flip(mRotate, mRotate, 1);
+            Core.flip(mRotate, mRotate, 0);
+            Core.flip(mRotate, mRotate, -1);
+        }
+
+
+
+        // 예슬 코드 원본
+//        detect(cascadeClassifier_face, mRgba.getNativeObjAddr(), mRgba.getNativeObjAddr(), inputMat.getNativeObjAddr());
+
+        // 변형
+        detect(cascadeClassifier_face, mRotate.getNativeObjAddr(), mRotate.getNativeObjAddr(), rotateInputMat.getNativeObjAddr());
         take_image = take_picture_function_rgb(take_image, mRgba);
 
         return mRgba;

@@ -15,5 +15,11 @@
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
     </style>
+
+    <style name="SplashActivityTheme" parent="Theme.AppCompat.NoActionBar">
+        <item name="android:windowBackground">@drawable/activity_splash</item>
+    <!-- Optional, on Android 5+ you can modify the colorPrimaryDark color to match the windowBackground color for further branding-->
+    </style>
+
 </resources>
 
