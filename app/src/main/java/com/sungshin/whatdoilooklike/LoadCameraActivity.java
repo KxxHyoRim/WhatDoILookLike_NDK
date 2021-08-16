@@ -77,11 +77,24 @@ public class LoadCameraActivity extends AppCompatActivity implements CameraBridg
     Interpreter interpreter, face_detect_interpreter;
     static TextView textView;
     MsgHandler handler;
-    private final int CAT = 0;
-    private final int DOG = 1;
-    private final int FOX = 2;
-    private final int ETC = 3;  // 결과 없음
-    static private final String[] animal = {"고양이", "강아지", "여우", "결과없음"};
+    private final int ANI1 = 0;
+    private final int ANI2 = 1;
+    private final int ANI3 = 2;
+    private final int ANI4 = 3;
+    private final int ANI5 = 4;
+    private final int ANI6 = 5;
+    private final int ANI7 = 6;
+    private final int ANI8 = 7;
+    private final int ANI9 = 8;
+    private final int ANI10 = 9;
+    private final int ANI11 = 10;
+    private final int ANI12 = 11;
+    private final int ANI13 = 12;
+    private final int ANI14 = 13;
+    private final int ANI15 = 14;
+    private final int ANI16 = 15;
+    private final int ETC = 16;
+    static private final String[] animal = {"황민현", "소희", "박보영", "백현","나연","박지훈","주지훈","제니","김우빈","천우희","안재홍","라미란","최시원","하주연","진","이정은","결과없음"};
 
     public native long loadCascade(String cascadeFileName);
     public native void detect(long cascadeClassifier_face, long matAddrInput, long matAddrResult, long nativeObjAddr);
@@ -266,20 +279,20 @@ public class LoadCameraActivity extends AppCompatActivity implements CameraBridg
         }
 
 
-        if (mCameraId == 1) {    // front camera
-            Core.flip(mRotate, mRotate, 1);
-            Core.flip(mRotate, mRotate, 0);
-            Core.flip(mRotate, mRotate, -1);
-        }
+//        if (mCameraId == 1) {    // front camera
+//            Core.flip(mRotate, mRotate, 1);
+//            Core.flip(mRotate, mRotate, 0);
+//            Core.flip(mRotate, mRotate, -1);
+//        }
 
 
 
-        // 예슬 코드 원본
-//        detect(cascadeClassifier_face, mRgba.getNativeObjAddr(), mRgba.getNativeObjAddr(), inputMat.getNativeObjAddr());
+         //예슬 코드 원본
+        detect(cascadeClassifier_face, mRgba.getNativeObjAddr(), mRgba.getNativeObjAddr(), inputMat.getNativeObjAddr());
 
-        // 변형
-        detect(cascadeClassifier_face, mRotate.getNativeObjAddr(), mRotate.getNativeObjAddr(), rotateInputMat.getNativeObjAddr());
-        take_image = take_picture_function_rgb(take_image, mRgba);
+//        // 변형
+//        detect(cascadeClassifier_face, mRotate.getNativeObjAddr(), mRotate.getNativeObjAddr(), rotateInputMat.getNativeObjAddr());
+//        take_image = take_picture_function_rgb(take_image, mRgba);
 
         return mRgba;
     }
@@ -374,22 +387,22 @@ public class LoadCameraActivity extends AppCompatActivity implements CameraBridg
              * 1. animal 이름의 배열 수정 : 결과 없음은 마지막 인덱스로 지정
              * 2. 바로 아래의 else if 문 추가
              * */
-            if(result == 0.0){  msg.what = CAT ; }
-            else if(result == 1.0){ msg.what = DOG ;}
-            else if(result == 2.0){ msg.what = FOX ;}
-            else if(result == 3.0){ msg.what = FOX ;}
-            else if(result == 4.0){ msg.what = FOX ;}
-            else if(result == 5.0){ msg.what = FOX ;}
-            else if(result == 6.0){ msg.what = FOX ;}
-            else if(result == 7.0){ msg.what = FOX ;}
-            else if(result == 8.0){ msg.what = FOX ;}
-            else if(result == 9.0){ msg.what = FOX ;}
-            else if(result == 10.0){ msg.what = FOX ;}
-            else if(result == 11.0){ msg.what = FOX ;}
-            else if(result == 12.0){ msg.what = FOX ;}
-            else if(result == 13.0){ msg.what = FOX ;}
-            else if(result == 14.0){ msg.what = FOX ;}
-            else if(result == 15.0){ msg.what = FOX ;}
+            if(result == 0.0){  msg.what = ANI1 ; }
+            else if(result == 1.0){ msg.what = ANI2 ;}
+            else if(result == 2.0){ msg.what = ANI3 ;}
+            else if(result == 3.0){ msg.what = ANI4 ;}
+            else if(result == 4.0){ msg.what = ANI5 ;}
+            else if(result == 5.0){ msg.what = ANI6 ;}
+            else if(result == 6.0){ msg.what = ANI7 ;}
+            else if(result == 7.0){ msg.what = ANI8 ;}
+            else if(result == 8.0){ msg.what = ANI9 ;}
+            else if(result == 9.0){ msg.what = ANI10 ;}
+            else if(result == 10.0){ msg.what = ANI11 ;}
+            else if(result == 11.0){ msg.what = ANI12 ;}
+            else if(result == 12.0){ msg.what = ANI13 ;}
+            else if(result == 13.0){ msg.what = ANI14 ;}
+            else if(result == 14.0){ msg.what = ANI15 ;}
+            else if(result == 15.0){ msg.what = ANI16 ;}
              else if (result == -1.0){ msg.what = ETC ;}
             handler.sendMessage(msg);
         }
