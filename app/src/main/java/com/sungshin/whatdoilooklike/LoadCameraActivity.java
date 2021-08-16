@@ -70,8 +70,8 @@ public class LoadCameraActivity extends AppCompatActivity implements CameraBridg
     private Mat mRgba;
     private Mat mGray;
     private Mat inputMat;
-    private Mat mRotate;
-    private Mat rotateInputMat;
+//    private Mat mRotate;
+//    private Mat rotateInputMat;
 
     private CameraBridgeViewBase mOpenCvCameraView;
     private ImageView flip_camera;     // call for image view of flip button
@@ -82,26 +82,29 @@ public class LoadCameraActivity extends AppCompatActivity implements CameraBridg
     Interpreter interpreter, face_detect_interpreter;
     static TextView textView;
     MsgHandler handler;
-    private final int ANI1 = 0;
-    private final int ANI2 = 1;
-    private final int ANI3 = 2;
-    private final int ANI4 = 3;
-    private final int ANI5 = 4;
-    private final int ANI6 = 5;
-    private final int ANI7 = 6;
-    private final int ANI8 = 7;
-    private final int ANI9 = 8;
-    private final int ANI10 = 9;
-    private final int ANI11 = 10;
-    private final int ANI12 = 11;
-    private final int ANI13 = 12;
-    private final int ANI14 = 13;
-    private final int ANI15 = 14;
-    private final int ANI16 = 15;
+    private final int CELEB1 = 0;
+    private final int CELEB2 = 1;
+    private final int CELEB3 = 2;
+    private final int CELEB4 = 3;
+    private final int CELEB5 = 4;
+    private final int CELEB6 = 5;
+    private final int CELEB7 = 6;
+    private final int CELEB8 = 7;
+    private final int CELEB9 = 8;
+    private final int CELEB10 = 9;
+    private final int CELEB11 = 10;
+    private final int CELEB12 = 11;
+    private final int CELEB13 = 12;
+    private final int CELEB14 = 13;
+    private final int CELEB15 = 14;
+    private final int CELEB16 = 15;
     private final int ETC = 16;
-    static private final String[] animal = {"황민현", "소희", "박보영", "백현","나연","박지훈",
+    static private final String[] celebrity = {"황민현", "소희", "박보영", "백현","나연","박지훈",
             "주지훈","제니","김우빈","천우희","안재홍","라미란","최시원","하주연","진","이정은","결과없음"};
 
+    static private final String[] animal = {"cat", "dog", "rabbit",  "fox", "dinosaur", "bear", "horse", "quokka"};
+
+    public native long loadCascade(String cascadeFileName);
     public native long loadCascade(String fileName, String cascadeFileName);
     public native void detect(long cascadeClassifier_face, long matAddrInput, long matAddrResult, long nativeObjAddr);
     public long cascadeClassifier_face=0;
@@ -210,7 +213,13 @@ public class LoadCameraActivity extends AppCompatActivity implements CameraBridg
     private static class MsgHandler extends Handler {
         @Override
         public void handleMessage(@NonNull Message msg) {
-            textView.setText("result : " + animal[msg.what]);
+
+            int animal_category = msg.what / 2;
+
+
+            textView.setText("result : " + celebrity[msg.what]);
+//            textView.setText("result : " + animal[animal_category]);
+
         }
     }
 
@@ -256,7 +265,7 @@ public class LoadCameraActivity extends AppCompatActivity implements CameraBridg
     public void onCameraViewStarted(int width ,int height){
         mRgba   = new Mat(height,width, CvType.CV_8UC4);
         mGray   = new Mat(height,width,CvType.CV_8UC1);
-        mRotate = new Mat(height,width, CvType.CV_8UC4);
+//        mRotate = new Mat(height,width, CvType.CV_8UC4);
 
 
     }
@@ -268,9 +277,9 @@ public class LoadCameraActivity extends AppCompatActivity implements CameraBridg
 
         mRgba=inputFrame.rgba();
         mGray=inputFrame.gray();
-        mRotate = inputFrame.rgba();
+//        mRotate = inputFrame.rgba();
         inputMat = new Mat();
-        rotateInputMat = mRotate.clone();
+//        rotateInputMat = mRotate.clone();
 
 
 
@@ -290,6 +299,7 @@ public class LoadCameraActivity extends AppCompatActivity implements CameraBridg
 //            Core.flip(mRotate, mRotate, 0);
 //            Core.flip(mRotate, mRotate, -1);
 //        }
+
 
 
          //예슬 코드 원본
@@ -398,25 +408,25 @@ public class LoadCameraActivity extends AppCompatActivity implements CameraBridg
 
 
             /** Category 추가 방법
-             * 1. animal 이름의 배열 수정 : 결과 없음은 마지막 인덱스로 지정
+             * 1. celebrity 이름의 배열 수정 : 결과 없음은 마지막 인덱스로 지정
              * 2. 바로 아래의 else if 문 추가
              * */
-            if(result == 0.0){  msg.what = ANI1 ; }
-            else if(result == 1.0){ msg.what = ANI2 ;}
-            else if(result == 2.0){ msg.what = ANI3 ;}
-            else if(result == 3.0){ msg.what = ANI4 ;}
-            else if(result == 4.0){ msg.what = ANI5 ;}
-            else if(result == 5.0){ msg.what = ANI6 ;}
-            else if(result == 6.0){ msg.what = ANI7 ;}
-            else if(result == 7.0){ msg.what = ANI8 ;}
-            else if(result == 8.0){ msg.what = ANI9 ;}
-            else if(result == 9.0){ msg.what = ANI10 ;}
-            else if(result == 10.0){ msg.what = ANI11 ;}
-            else if(result == 11.0){ msg.what = ANI12 ;}
-            else if(result == 12.0){ msg.what = ANI13 ;}
-            else if(result == 13.0){ msg.what = ANI14 ;}
-            else if(result == 14.0){ msg.what = ANI15 ;}
-            else if(result == 15.0){ msg.what = ANI16 ;}
+            if(result == 0.0){  msg.what = CELEB1 ; }
+            else if(result == 1.0){ msg.what = CELEB2 ;}
+            else if(result == 2.0){ msg.what = CELEB3 ;}
+            else if(result == 3.0){ msg.what = CELEB4 ;}
+            else if(result == 4.0){ msg.what = CELEB5 ;}
+            else if(result == 5.0){ msg.what = CELEB6 ;}
+            else if(result == 6.0){ msg.what = CELEB7 ;}
+            else if(result == 7.0){ msg.what = CELEB8 ;}
+            else if(result == 8.0){ msg.what = CELEB9 ;}
+            else if(result == 9.0){ msg.what = CELEB10 ;}
+            else if(result == 10.0){ msg.what = CELEB11 ;}
+            else if(result == 11.0){ msg.what = CELEB12 ;}
+            else if(result == 12.0){ msg.what = CELEB13 ;}
+            else if(result == 13.0){ msg.what = CELEB14 ;}
+            else if(result == 14.0){ msg.what = CELEB15 ;}
+            else if(result == 15.0){ msg.what = CELEB16 ;}
             else if (result == -1.0){ msg.what = ETC ;}
         }
         handler.sendMessage(msg);
@@ -469,7 +479,19 @@ public class LoadCameraActivity extends AppCompatActivity implements CameraBridg
             }
         }
 
+        float[] animal_rate = new float[8];
+        for (int i = 0 ; i < 8; i++){ animal_rate[i] = 0.0f; }
+
+        for (int i = 0 ; i< 16; i++){
+            animal_rate[i/2] += output[0][i];
+        }
+
+        for (int i = 0 ; i < 8; i++){
+            System.out.println("비율확인 :: " + animal[i] + " : " + animal_rate[i] + " ");
+        }
+
         DecimalFormat df = new DecimalFormat("#.##");
+
         //Log.i(TAG, "output :: " + df.format(output[0][0]) + ", " + df.format(output[0][1]) + ", " +  df.format(output[0][2]) );
 
         // category 비율이 40이하일 경우 '결과 없음'으로 표시 (필터 변경 최소화)
