@@ -9,6 +9,7 @@ import android.Manifest;
 import android.annotation.TargetApi;
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.content.ContextWrapper;
 import android.content.DialogInterface;
 import android.content.pm.PackageManager;
 import android.content.res.AssetFileDescriptor;
@@ -62,6 +63,10 @@ public class LoadCameraActivity extends AppCompatActivity implements CameraBridg
 
     private static final String TAG="Camera";
 
+    String baseDir;
+    String packageName;
+    String pathDir;
+
     private Mat mRgba;
     private Mat mGray;
     private Mat inputMat;
@@ -97,7 +102,7 @@ public class LoadCameraActivity extends AppCompatActivity implements CameraBridg
     static private final String[] animal = {"황민현", "소희", "박보영", "백현","나연","박지훈",
             "주지훈","제니","김우빈","천우희","안재홍","라미란","최시원","하주연","진","이정은","결과없음"};
 
-    public native long loadCascade(String cascadeFileName);
+    public native long loadCascade(String fileName, String cascadeFileName);
     public native void detect(long cascadeClassifier_face, long matAddrInput, long matAddrResult, long nativeObjAddr);
     public long cascadeClassifier_face=0;
 
@@ -287,20 +292,25 @@ public class LoadCameraActivity extends AppCompatActivity implements CameraBridg
 //        }
 
 
-
          //예슬 코드 원본
         detect(cascadeClassifier_face, mRgba.getNativeObjAddr(), mRgba.getNativeObjAddr(), inputMat.getNativeObjAddr());
 
 //        // 변형
 //        detect(cascadeClassifier_face, mRotate.getNativeObjAddr(), mRotate.getNativeObjAddr(), rotateInputMat.getNativeObjAddr());
-        take_image = take_picture_function_rgb(take_image, mRgba);
+        take_image = take_picture_function_rgb(take_image, mRgba, inputMat);
 
         return mRgba;
     }
 
     private void copyFile(String filename) {
-        String baseDir = Environment.getExternalStorageDirectory().getPath();
-        String pathDir = baseDir + File.separator + filename;
+        //저장할 외부 저장소의 경로 구하기
+        baseDir = Environment.getExternalStorageDirectory().getAbsolutePath();
+        //ContextWrapper cw = new ContextWrapper(getApplicationContext());
+        //File directory = cw.getExternalFilesDir(Environment.getExternalStorageDirectory().getPath());
+        //패키지명을 구한다
+        packageName = getPackageName();
+        //String pathDir = baseDir + File.separator + filename;
+        pathDir = baseDir +"/android/data/"+packageName + File.separator + filename;
 
         AssetManager assetManager = this.getAssets();
 
@@ -325,7 +335,7 @@ public class LoadCameraActivity extends AppCompatActivity implements CameraBridg
         } catch (Exception e) {
             Log.d(TAG, "copyFile :: 파일 복사 중 예외 발생 "+e.toString() );
         }
-
+        Log.d(TAG, "xml 파일 다 읽음" );
     }
 
     private void read_cascade_file(){
@@ -334,11 +344,11 @@ public class LoadCameraActivity extends AppCompatActivity implements CameraBridg
         Log.d(TAG,"Read_cascade_file");
 
         //loadCascade 메소드는 외부 저장소의 특정 위치에서 해당 파일을 읽어와서 CascadeClassifier 객체로 로드함
-        cascadeClassifier_face = loadCascade("haarcascade_frontalface_alt.xml");
+        cascadeClassifier_face = loadCascade("haarcascade_frontalface_alt.xml",pathDir);
         Log.d(TAG,"read_cascade_file:");
     }
 
-    private int take_picture_function_rgb(int take_image, Mat mRgba) {
+    private int take_picture_function_rgb(int take_image, Mat mRgba, Mat input) {
 
         Mat save_mat = new Mat();
 
@@ -376,14 +386,14 @@ public class LoadCameraActivity extends AppCompatActivity implements CameraBridg
         }
         Message msg = handler.obtainMessage();
 
-        if(inputMat.empty()){
+        if(input.empty()){
             Log.e(TAG, "얼굴 검출이 되지 않음!");
             msg.what = ETC;
         }
         else{
-            int result = doInference(inputMat);
+            int result = doInference(input);
             Log.e(TAG,"Result After DoInference = " + result );
-            Log.e(TAG, "crop 후 input image 사이즈:" + inputMat.width() +" * " +inputMat.height());
+            Log.e(TAG, "crop 후 input image 사이즈:" + input.width() +" * " +input.height());
 
 
 

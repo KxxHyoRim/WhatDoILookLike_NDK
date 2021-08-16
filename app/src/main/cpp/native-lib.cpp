@@ -39,21 +39,22 @@ Java_com_sungshin_whatdoilooklike_MainActivity_stringFromJNI(
 
 extern "C"
 JNIEXPORT jlong JNICALL
-Java_com_sungshin_whatdoilooklike_LoadCameraActivity_loadCascade(JNIEnv *env, jobject thiz, jstring cascade_file_name) {
+Java_com_sungshin_whatdoilooklike_LoadCameraActivity_loadCascade(JNIEnv *env, jobject thiz, jstring cascade_file_name, jstring base_dir) {
     // TODO: implement loadCascade()
     const char *nativeFileNameString = env->GetStringUTFChars(cascade_file_name, 0);
+    const char *basePathDir = env->GetStringUTFChars(base_dir, 0);
 
-    string baseDir("/storage/emulated/0/");
-    baseDir.append(nativeFileNameString);
+    string baseDir(basePathDir);
+    //baseDir.append(nativeFileNameString);
     const char *pathDir = baseDir.c_str();
 
     jlong ret = 0;
     ret = (jlong) new CascadeClassifier(pathDir);
     if (((CascadeClassifier *) ret)->empty()) {
-        //__android_log_print(ANDROID_LOG_DEBUG, "native-lib :: ","CascadeClassifier로 로딩 실패  %s", nativeFileNameString);
+        __android_log_print(ANDROID_LOG_DEBUG, "native-lib :: ","CascadeClassifier로 로딩 실패  %s", pathDir);
     }
     else
-       //__android_log_print(ANDROID_LOG_DEBUG, "native-lib :: ","CascadeClassifier로 로딩 성공 %s", nativeFileNameString);
+       __android_log_print(ANDROID_LOG_DEBUG, "native-lib :: ","CascadeClassifier로 로딩 성공 %s", pathDir);
 
 
     env->ReleaseStringUTFChars(cascade_file_name, nativeFileNameString);
@@ -88,7 +89,7 @@ Java_com_sungshin_whatdoilooklike_LoadCameraActivity_detect(JNIEnv *env, jobject
     ((CascadeClassifier *) cascade_classifier_face)->detectMultiScale( img_resize, faces, 1.1, 3, 0|CASCADE_SCALE_IMAGE, Size(30, 30) );
 
 
-    //__android_log_print(ANDROID_LOG_DEBUG, (char *) "native-lib :: ",(char *) "face %d found ", faces.size());
+    __android_log_print(ANDROID_LOG_DEBUG, (char *) "native-lib :: ",(char *) "face %d found ", faces.size());
 
     for (int i = 0; i < faces.size(); i++) {
         double real_facesize_x = faces[i].x / resizeRatio;
