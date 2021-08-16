@@ -322,6 +322,13 @@ public class LoadCameraActivity extends AppCompatActivity implements CameraBridg
         //String pathDir = baseDir + File.separator + filename;
         pathDir = baseDir +"/android/data/"+packageName + File.separator + filename;
 
+        //외부저장소 경로 있는지 확인, 없으면 생성
+        String path = baseDir +"/android/data/"+packageName;
+        File file = new File(path);
+        if(file.exists() == false){
+            file.mkdir();
+        }
+
         AssetManager assetManager = this.getAssets();
 
         InputStream inputStream = null;
