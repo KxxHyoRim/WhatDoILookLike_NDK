@@ -5,7 +5,7 @@
 
 cmake_minimum_required(VERSION 3.4.1)
 
-set(pathPROJECT "C:/Users/Kim Hyo Rim/AndroidStudioProjects/WhatDoILookLike") # 수정필요
+set(pathPROJECT "C:/Users/82109/AndroidStudioProjects/WhatDoILookLike_clean") # 수정필요
 set(pathOPENCV ${pathPROJECT}/sdk)
 set(pathLIBOPENCV_JAVA ${pathOPENCV}/native/libs/${ANDROID_ABI}/libopencv_java4.so)
 
@@ -47,7 +47,14 @@ find_library( # Sets the name of the path variable.
 
         # Specifies the name of the NDK library that
         # you want CMake to locate.
-        android )
+        android
+        )
+
+find_library(
+        log-lib
+
+        log
+)
 
 # Specifies libraries CMake should link to your target library. You
 # can link multiple libraries, such as libraries you define in this
@@ -55,9 +62,10 @@ find_library( # Sets the name of the path variable.
 
 target_link_libraries( # Specifies the target library.
         native-lib
-
+        ${android-lib}
         lib_opencv
 
+        ${log-lib}
         # Links the target library to the log library
         # included in the NDK.
-        ${android-lib} )
+         )
