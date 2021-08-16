@@ -44,20 +44,20 @@ public class MainActivity extends AppCompatActivity {
     }
 
     /*
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        // Check which request we're responding to
-        super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == 1) {
-            // Make sure the request was successful
-            if (resultCode == RESULT_OK) {
-                Uri photoUri = data.getData();
-                Intent intent = new Intent(MainActivity.this, LoadgalleryActivity.class);
-                intent.putExtra("bitmap", String.valueOf(photoUri));
-                startActivity(intent);
-            }
-        }
-    }
+//    @Override
+//    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+//        // Check which request we're responding to
+//        super.onActivityResult(requestCode, resultCode, data);
+//        if (requestCode == 1) {
+//            // Make sure the request was successful
+//            if (resultCode == RESULT_OK) {
+//                Uri photoUri = data.getData();
+//                Intent intent = new Intent(MainActivity.this, LoadgalleryActivity.class);
+//                intent.putExtra("bitmap", String.valueOf(photoUri));
+//                startActivity(intent);
+//            }
+//        }
+//    }
     */
 
 

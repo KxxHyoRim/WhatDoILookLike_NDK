@@ -292,7 +292,7 @@ public class LoadCameraActivity extends AppCompatActivity implements CameraBridg
 
 //        // 변형
 //        detect(cascadeClassifier_face, mRotate.getNativeObjAddr(), mRotate.getNativeObjAddr(), rotateInputMat.getNativeObjAddr());
-//        take_image = take_picture_function_rgb(take_image, mRgba);
+        take_image = take_picture_function_rgb(take_image, mRgba);
 
         return mRgba;
     }
@@ -379,6 +379,7 @@ public class LoadCameraActivity extends AppCompatActivity implements CameraBridg
         }
         else{
             int result = doInference(inputMat);
+            Log.e(TAG,"Result After DoInference = " + result );
             Log.e(TAG, "crop 후 input image 사이즈:" + inputMat.width() +" * " +inputMat.height());
 
             Message msg = handler.obtainMessage();
@@ -403,7 +404,7 @@ public class LoadCameraActivity extends AppCompatActivity implements CameraBridg
             else if(result == 13.0){ msg.what = ANI14 ;}
             else if(result == 14.0){ msg.what = ANI15 ;}
             else if(result == 15.0){ msg.what = ANI16 ;}
-             else if (result == -1.0){ msg.what = ETC ;}
+            else if (result == -1.0){ msg.what = ETC ;}
             handler.sendMessage(msg);
         }
 
