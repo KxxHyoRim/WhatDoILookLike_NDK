@@ -26,10 +26,15 @@ public class LoadGalleryActivity extends AppCompatActivity {
 
     File tempFile;
 
+    static {
+        System.loadLibrary("opencv_java4");
+        System.loadLibrary("native-lib");
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_gallery);
+        setContentView(R.layout.activity_result);
 
         ImageView imageview = (ImageView)findViewById(R.id.imageView);
 
@@ -54,8 +59,9 @@ public class LoadGalleryActivity extends AppCompatActivity {
         Bitmap bitmap = BitmapFactory.decodeStream(in);
         bitmap = rotateBitmap(bitmap, orientation);
 
-        //Mat gray = new Mat();
-        //Utils.bitmapToMat(bitmap, gray);
+        //갤러리 이미지 Mat
+        Mat mat = new Mat();
+        Utils.bitmapToMat(bitmap, mat);
 
         imageview.setImageBitmap(bitmap);
     }
