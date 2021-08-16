@@ -8,7 +8,7 @@
     <item
         android:width="280dp"
         android:height="592.8dp"
-        android:drawable="@drawable/splash"
+        android:drawable="@drawable/splash_small"
         android:gravity = "center"/>
 
     <!--        android:left="60dp"-->
