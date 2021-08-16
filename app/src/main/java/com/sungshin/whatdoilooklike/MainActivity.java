@@ -43,7 +43,7 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
-    /*
+
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         // Check which request we're responding to
@@ -52,13 +52,13 @@ public class MainActivity extends AppCompatActivity {
             // Make sure the request was successful
             if (resultCode == RESULT_OK) {
                 Uri photoUri = data.getData();
-                Intent intent = new Intent(MainActivity.this, LoadgalleryActivity.class);
+                Intent intent = new Intent(MainActivity.this, LoadGalleryActivity.class);
                 intent.putExtra("bitmap", String.valueOf(photoUri));
                 startActivity(intent);
             }
         }
     }
-    */
+
 
 
 }

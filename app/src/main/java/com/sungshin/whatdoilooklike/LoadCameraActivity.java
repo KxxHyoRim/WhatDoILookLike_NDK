@@ -264,7 +264,7 @@ public class LoadCameraActivity extends AppCompatActivity implements CameraBridg
         mRgba=inputFrame.rgba();
         mGray=inputFrame.gray();
         mRotate = inputFrame.rgba();
-        inputMat = new Mat();
+        inputMat=mRgba.clone();
         rotateInputMat = mRotate.clone();
 
 
@@ -383,6 +383,7 @@ public class LoadCameraActivity extends AppCompatActivity implements CameraBridg
         }
         else{
             int result = doInference(inputMat);
+            Log.e(TAG,"Result After DoInference = " + result );
             Log.e(TAG, "crop 후 input image 사이즈:" + inputMat.width() +" * " +inputMat.height());
 
 
