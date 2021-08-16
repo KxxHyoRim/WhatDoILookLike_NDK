@@ -94,8 +94,8 @@ public class LoadCameraActivity extends AppCompatActivity implements CameraBridg
     private final int ANI15 = 14;
     private final int ANI16 = 15;
     private final int ETC = 16;
-    private final int NO = 17;
-    static private final String[] animal = {"황민현", "소희", "박보영", "백현","나연","박지훈","주지훈","제니","김우빈","천우희","안재홍","라미란","최시원","하주연","진","이정은","결과없음","얼굴없음"};
+    static private final String[] animal = {"황민현", "소희", "박보영", "백현","나연","박지훈",
+            "주지훈","제니","김우빈","천우희","안재홍","라미란","최시원","하주연","진","이정은","결과없음"};
 
     public native long loadCascade(String cascadeFileName);
     public native void detect(long cascadeClassifier_face, long matAddrInput, long matAddrResult, long nativeObjAddr);
@@ -264,7 +264,7 @@ public class LoadCameraActivity extends AppCompatActivity implements CameraBridg
         mRgba=inputFrame.rgba();
         mGray=inputFrame.gray();
         mRotate = inputFrame.rgba();
-        inputMat=mRgba.clone();
+        inputMat = new Mat();
         rotateInputMat = mRotate.clone();
 
 
@@ -378,8 +378,7 @@ public class LoadCameraActivity extends AppCompatActivity implements CameraBridg
 
         if(inputMat.empty()){
             Log.e(TAG, "얼굴 검출이 되지 않음!");
-
-            msg.what = NO;
+            msg.what = ETC;
         }
         else{
             int result = doInference(inputMat);
@@ -408,7 +407,7 @@ public class LoadCameraActivity extends AppCompatActivity implements CameraBridg
             else if(result == 13.0){ msg.what = ANI14 ;}
             else if(result == 14.0){ msg.what = ANI15 ;}
             else if(result == 15.0){ msg.what = ANI16 ;}
-             else if (result == -1.0){ msg.what = ETC ;}
+            else if (result == -1.0){ msg.what = ETC ;}
         }
         handler.sendMessage(msg);
         return take_image;
