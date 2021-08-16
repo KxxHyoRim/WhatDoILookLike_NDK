@@ -422,7 +422,7 @@ public class LoadCameraActivity extends AppCompatActivity implements CameraBridg
     private int doInference(Mat image){
 
         float[][][][] input = new float[1][96][96][1];
-        float[][] output = new float[1][3];
+        float[][] output = new float[1][16];
 
         Imgproc.resize(image, image, new Size(96, 96));
 
