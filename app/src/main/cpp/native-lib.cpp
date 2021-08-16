@@ -53,7 +53,7 @@ Java_com_sungshin_whatdoilooklike_LoadCameraActivity_loadCascade(JNIEnv *env, jo
         //__android_log_print(ANDROID_LOG_DEBUG, "native-lib :: ","CascadeClassifier로 로딩 실패  %s", nativeFileNameString);
     }
     else
-       // __android_log_print(ANDROID_LOG_DEBUG, "native-lib :: ","CascadeClassifier로 로딩 성공 %s", nativeFileNameString);
+       //__android_log_print(ANDROID_LOG_DEBUG, "native-lib :: ","CascadeClassifier로 로딩 성공 %s", nativeFileNameString);
 
 
     env->ReleaseStringUTFChars(cascade_file_name, nativeFileNameString);
@@ -73,7 +73,7 @@ Java_com_sungshin_whatdoilooklike_LoadCameraActivity_detect(JNIEnv *env, jobject
     Mat &img_crop = *(Mat *) mat_addr_crop;
 
     img_result = img_input.clone();
-    img_crop = img_input.clone();
+    //img_crop = img_input.clone();
 
     std::vector<Rect> faces;
     Mat img_gray;
@@ -96,14 +96,14 @@ Java_com_sungshin_whatdoilooklike_LoadCameraActivity_detect(JNIEnv *env, jobject
         double real_facesize_width = faces[i].width / resizeRatio;
         double real_facesize_height = faces[i].height / resizeRatio *1.2;
         Rect rect(real_facesize_x, real_facesize_y, real_facesize_width, real_facesize_height);
-        Rect bounds(0,0,img_crop.cols,img_crop.rows);
+        Rect bounds(0,0,img_input.cols,img_input.rows);
 
         //Point center( real_face
         // size_x + real_facesize_width / 2, real_facesize_y + real_facesize_height/2);
         //ellipse(img_result, center, Size( real_facesize_width / 2, real_facesize_height / 2), 0, 0, 360, Scalar(255, 0, 255), 30, 8, 0);
         //얼굴 사각형 처리
         rectangle(img_result,Point(real_facesize_x,real_facesize_y),Point(real_facesize_x+real_facesize_width,real_facesize_y+real_facesize_height),Scalar(255, 0, 255),2,8,0);
-        img_crop = img_crop(rect & bounds);
+        img_crop = img_input(rect & bounds);
     }
 
 }
