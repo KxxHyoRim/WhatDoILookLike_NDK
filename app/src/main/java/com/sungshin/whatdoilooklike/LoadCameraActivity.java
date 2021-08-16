@@ -292,7 +292,7 @@ public class LoadCameraActivity extends AppCompatActivity implements CameraBridg
 
 //        // 변형
 //        detect(cascadeClassifier_face, mRotate.getNativeObjAddr(), mRotate.getNativeObjAddr(), rotateInputMat.getNativeObjAddr());
-//        take_image = take_picture_function_rgb(take_image, mRgba);
+        take_image = take_picture_function_rgb(take_image, mRgba);
 
         return mRgba;
     }
