@@ -13,7 +13,6 @@
 .externalNativeBuild
 .cxx
 local.properties
-CMakeLists.txt
 
 # Built application files
 *.apk
