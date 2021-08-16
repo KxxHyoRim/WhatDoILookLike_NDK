@@ -65,8 +65,8 @@ public class LoadCameraActivity extends AppCompatActivity implements CameraBridg
     private Mat mRgba;
     private Mat mGray;
     private Mat inputMat;
-    private Mat mRotate;
-    private Mat rotateInputMat;
+//    private Mat mRotate;
+//    private Mat rotateInputMat;
 
     private CameraBridgeViewBase mOpenCvCameraView;
     private ImageView flip_camera;     // call for image view of flip button
@@ -259,7 +259,7 @@ public class LoadCameraActivity extends AppCompatActivity implements CameraBridg
     public void onCameraViewStarted(int width ,int height){
         mRgba   = new Mat(height,width, CvType.CV_8UC4);
         mGray   = new Mat(height,width,CvType.CV_8UC1);
-        mRotate = new Mat(height,width, CvType.CV_8UC4);
+//        mRotate = new Mat(height,width, CvType.CV_8UC4);
 
 
     }
@@ -271,9 +271,9 @@ public class LoadCameraActivity extends AppCompatActivity implements CameraBridg
 
         mRgba=inputFrame.rgba();
         mGray=inputFrame.gray();
-        mRotate = inputFrame.rgba();
+//        mRotate = inputFrame.rgba();
         inputMat = new Mat();
-        rotateInputMat = mRotate.clone();
+//        rotateInputMat = mRotate.clone();
 
 
 
