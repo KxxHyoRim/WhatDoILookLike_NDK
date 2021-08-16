@@ -1,7 +1,9 @@
 package com.sungshin.whatdoilooklike;
 
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageButton;
@@ -33,14 +35,27 @@ public class MainActivity extends AppCompatActivity {
         imgBtn_gallery.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
                 // 갤러리로 이동
+                Intent intent = new Intent(Intent.ACTION_PICK);
+                intent.setType(MediaStore.Images.Media.CONTENT_TYPE);
+                startActivityForResult(intent, 1);
             }
         });
+    }
 
-
-
-
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        // Check which request we're responding to
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == 1) {
+            // Make sure the request was successful
+            if (resultCode == RESULT_OK) {
+                Uri photoUri = data.getData();
+                Intent intent = new Intent(MainActivity.this, LoadgalleryActivity.class);
+                intent.putExtra("bitmap", String.valueOf(photoUri));
+                startActivity(intent);
+            }
+        }
     }
 
 }

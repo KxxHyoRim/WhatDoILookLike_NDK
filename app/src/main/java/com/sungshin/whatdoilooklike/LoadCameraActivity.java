@@ -150,7 +150,7 @@ public class LoadCameraActivity extends AppCompatActivity implements CameraBridg
 
 
         // 3. Allocate Instance
-        interpreter = getTfliteInterpreter("converted_model.tflite");
+        interpreter = getTfliteInterpreter("converted_model2.tflite");
         textView = (TextView) findViewById(R.id.textView);
         mOpenCvCameraView=(CameraBridgeViewBase)findViewById(R.id.frame_Surface);
         mOpenCvCameraView.setVisibility(SurfaceView.VISIBLE);
@@ -377,7 +377,20 @@ public class LoadCameraActivity extends AppCompatActivity implements CameraBridg
             if(result == 0.0){  msg.what = CAT ; }
             else if(result == 1.0){ msg.what = DOG ;}
             else if(result == 2.0){ msg.what = FOX ;}
-            else if (result == -1.0){ msg.what = ETC ;}
+            else if(result == 3.0){ msg.what = FOX ;}
+            else if(result == 4.0){ msg.what = FOX ;}
+            else if(result == 5.0){ msg.what = FOX ;}
+            else if(result == 6.0){ msg.what = FOX ;}
+            else if(result == 7.0){ msg.what = FOX ;}
+            else if(result == 8.0){ msg.what = FOX ;}
+            else if(result == 9.0){ msg.what = FOX ;}
+            else if(result == 10.0){ msg.what = FOX ;}
+            else if(result == 11.0){ msg.what = FOX ;}
+            else if(result == 12.0){ msg.what = FOX ;}
+            else if(result == 13.0){ msg.what = FOX ;}
+            else if(result == 14.0){ msg.what = FOX ;}
+            else if(result == 15.0){ msg.what = FOX ;}
+             else if (result == -1.0){ msg.what = ETC ;}
             handler.sendMessage(msg);
         }
 
@@ -408,10 +421,10 @@ public class LoadCameraActivity extends AppCompatActivity implements CameraBridg
 
     private int doInference(Mat image){
 
-        float[][][][] input = new float[1][50][50][1];
+        float[][][][] input = new float[1][96][96][1];
         float[][] output = new float[1][3];
 
-        Imgproc.resize(image, image, new Size(50, 50));
+        Imgproc.resize(image, image, new Size(96, 96));
 
         for(int i=0;i<image.rows();i++)
             for(int j=0;j<image.cols();j++) {
@@ -423,7 +436,7 @@ public class LoadCameraActivity extends AppCompatActivity implements CameraBridg
 
         int out = 0;        // index
         float out2 = 0;     // ratio
-        for(int i=0;i<3;i++) {
+        for(int i=0;i<16;i++) {
             if (output[0][i] > out2) {
                 out2 = output[0][i];
                 out = i;
@@ -431,10 +444,10 @@ public class LoadCameraActivity extends AppCompatActivity implements CameraBridg
         }
 
         DecimalFormat df = new DecimalFormat("#.##");
-        Log.i(TAG, "output :: " + df.format(output[0][0]) + ", " + df.format(output[0][1]) + ", " +  df.format(output[0][2]) );
+        //Log.i(TAG, "output :: " + df.format(output[0][0]) + ", " + df.format(output[0][1]) + ", " +  df.format(output[0][2]) );
 
         // category 비율이 40이하일 경우 '결과 없음'으로 표시 (필터 변경 최소화)
-        if (out2 < 0.6) { out = -1; }
+        //if (out2 < 0.6) { out = -1; }
 
         return out;
     }
