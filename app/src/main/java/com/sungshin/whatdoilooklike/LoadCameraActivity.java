@@ -52,6 +52,7 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.nio.MappedByteBuffer;
 import java.nio.channels.FileChannel;
+import java.sql.SQLOutput;
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.Collections;
@@ -82,27 +83,25 @@ public class LoadCameraActivity extends AppCompatActivity implements CameraBridg
     Interpreter interpreter, face_detect_interpreter;
     static TextView textView;
     MsgHandler handler;
-    private final int CELEB1 = 0;
-    private final int CELEB2 = 1;
-    private final int CELEB3 = 2;
-    private final int CELEB4 = 3;
-    private final int CELEB5 = 4;
-    private final int CELEB6 = 5;
-    private final int CELEB7 = 6;
-    private final int CELEB8 = 7;
-    private final int CELEB9 = 8;
-    private final int CELEB10 = 9;
-    private final int CELEB11 = 10;
-    private final int CELEB12 = 11;
-    private final int CELEB13 = 12;
-    private final int CELEB14 = 13;
-    private final int CELEB15 = 14;
-    private final int CELEB16 = 15;
-    private final int ETC = 16;
+//    private final int CELEB1 = 0;
+//    private final int CELEB2 = 1;
+
+
+    private final int ANI0 = 0;
+    private final int ANI1 = 1;
+    private final int ANI2 = 2;
+    private final int ANI3 = 3;
+    private final int ANI4 = 4;
+    private final int ANI5 = 5;
+    private final int ANI6 = 6;
+    private final int ANI7 = 7;
+    private final int ETC =  8;
+
     static private final String[] celebrity = {"황민현", "소희", "박보영", "백현","나연","박지훈",
             "주지훈","제니","김우빈","천우희","안재홍","라미란","최시원","하주연","진","이정은","결과없음"};
 
-    static private final String[] animal = {"cat", "dog", "rabbit",  "fox", "dinosaur", "bear", "horse", "quokka"};
+    static private final String[] animal = {"cat", "dog", "rabbit",  "fox", "dinosaur", "bear", "horse", "quokka","결과없음"};
+    private int temp_idx = 8;
 
     public native long loadCascade(String cascadeFileName);
     public native long loadCascade(String fileName, String cascadeFileName);
@@ -213,11 +212,10 @@ public class LoadCameraActivity extends AppCompatActivity implements CameraBridg
     private static class MsgHandler extends Handler {
         @Override
         public void handleMessage(@NonNull Message msg) {
+//
+//            int animal_category = msg.what / 2;
 
-            int animal_category = msg.what / 2;
-
-
-            textView.setText("result : " + celebrity[msg.what]);
+            textView.setText("result : " + animal[msg.what]);
 //            textView.setText("result : " + animal[animal_category]);
 
         }
@@ -401,13 +399,14 @@ public class LoadCameraActivity extends AppCompatActivity implements CameraBridg
 
             take_image = 0;
         }
-        Message msg = handler.obtainMessage();
 
         if(input.empty()){
             Log.e(TAG, "얼굴 검출이 되지 않음!");
-            msg.what = ETC;
+//            msg.what = ETC;
         }
         else{
+            Message msg = handler.obtainMessage();
+
             int result = doInference(input);
             Log.e(TAG,"Result After DoInference = " + result );
             Log.e(TAG, "crop 후 input image 사이즈:" + input.width() +" * " +input.height());
@@ -418,25 +417,18 @@ public class LoadCameraActivity extends AppCompatActivity implements CameraBridg
              * 1. celebrity 이름의 배열 수정 : 결과 없음은 마지막 인덱스로 지정
              * 2. 바로 아래의 else if 문 추가
              * */
-            if(result == 0.0){  msg.what = CELEB1 ; }
-            else if(result == 1.0){ msg.what = CELEB2 ;}
-            else if(result == 2.0){ msg.what = CELEB3 ;}
-            else if(result == 3.0){ msg.what = CELEB4 ;}
-            else if(result == 4.0){ msg.what = CELEB5 ;}
-            else if(result == 5.0){ msg.what = CELEB6 ;}
-            else if(result == 6.0){ msg.what = CELEB7 ;}
-            else if(result == 7.0){ msg.what = CELEB8 ;}
-            else if(result == 8.0){ msg.what = CELEB9 ;}
-            else if(result == 9.0){ msg.what = CELEB10 ;}
-            else if(result == 10.0){ msg.what = CELEB11 ;}
-            else if(result == 11.0){ msg.what = CELEB12 ;}
-            else if(result == 12.0){ msg.what = CELEB13 ;}
-            else if(result == 13.0){ msg.what = CELEB14 ;}
-            else if(result == 14.0){ msg.what = CELEB15 ;}
-            else if(result == 15.0){ msg.what = CELEB16 ;}
-            else if (result == -1.0){ msg.what = ETC ;}
+            if(result == 0.0){  msg.what = ANI0 ; }
+            else if(result == 1.0){ msg.what = ANI1 ;}
+            else if(result == 2.0){ msg.what = ANI2 ;}
+            else if(result == 3.0){ msg.what = ANI3 ;}
+            else if(result == 4.0){ msg.what = ANI4 ;}
+            else if(result == 5.0){ msg.what = ANI5 ;}
+            else if(result == 6.0){ msg.what = ANI6 ;}
+            else if(result == 7.0){ msg.what = ANI7 ;}
+
+            handler.sendMessage(msg);
+
         }
-        handler.sendMessage(msg);
         return take_image;
     }
 
@@ -462,6 +454,8 @@ public class LoadCameraActivity extends AppCompatActivity implements CameraBridg
 
     }
 
+
+
     private int doInference(Mat image){
 
         float[][][][] input = new float[1][96][96][1];
@@ -475,36 +469,59 @@ public class LoadCameraActivity extends AppCompatActivity implements CameraBridg
                 input[0][i][j][0] = (float) (pixel / 255.0);
             }
 
+        /** DeepLearning Model 실행 */
         interpreter.run(input, output);
 
-        int out = 0;        // index
-        float out2 = 0;     // ratio
-        for(int i=0;i<16;i++) {
-            if (output[0][i] > out2) {
-                out2 = output[0][i];
-                out = i;
-            }
-        }
+        // 닮은꼴 연예인 찾기
+//        int out = 0;        // index
+//        float out2 = 0;     // ratio
+//        for(int i=0;i<16;i++) {
+//            if (output[0][i] > out2) {
+//                out2 = output[0][i];
+//                out = i;
+//            }
+//        }
 
+        // 닮은꼴 동물 찾기
+
+        // 1) 배열 선언 및 초기화
         float[] animal_rate = new float[8];
         for (int i = 0 ; i < 8; i++){ animal_rate[i] = 0.0f; }
 
+        // 2) 동물별 비율 구하기
         for (int i = 0 ; i< 16; i++){
             animal_rate[i/2] += output[0][i];
         }
 
+        DecimalFormat df = new DecimalFormat("#.##");
+//        System.out.println("비율확인 HyoRim::========================================================");
+//        System.out.print("HyoRim:: ");
+//        for (int i = 0 ; i < 8; i++){
+//            System.out.print( animal[i] + ": " + df.format(animal_rate[i] )+ " ");
+//        }
+//        System.out.println();
+
+
+        // 3) 가장 닮은 동물 찾기
+        int maxIdx = 0;
+        float maxVal = 0;
         for (int i = 0 ; i < 8; i++){
-            System.out.println("비율확인 :: " + animal[i] + " : " + animal_rate[i] + " ");
+            if (animal_rate[i] > maxVal){
+                maxVal = animal_rate[i];
+                maxIdx = i;
+            }
         }
 
-        DecimalFormat df = new DecimalFormat("#.##");
+        // 닮은꼴 비율이 30프로가 넘을때만 return 할 변수의 값을 갱신
+        // 그렇지 않다면 이전에 검출됐던 결과중 마지막으로 30을 넘은 경우를 return
+        if(maxVal >= 0.3) {
+            temp_idx = maxIdx;
+            System.out.println("HyoRim:: "+  animal[temp_idx] + " (" + df.format(maxVal * 100) + "%)");
+        }else {
+            System.out.println("HyoRim:: " +  animal[temp_idx] + " X 30");
+        }
 
-        //Log.i(TAG, "output :: " + df.format(output[0][0]) + ", " + df.format(output[0][1]) + ", " +  df.format(output[0][2]) );
-
-        // category 비율이 40이하일 경우 '결과 없음'으로 표시 (필터 변경 최소화)
-        //if (out2 < 0.6) { out = -1; }
-
-        return out;
+        return temp_idx;
     }
 
     protected List<? extends CameraBridgeViewBase> getCameraViewList() {
