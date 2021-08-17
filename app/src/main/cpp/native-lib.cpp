@@ -86,7 +86,7 @@ Java_com_sungshin_whatdoilooklike_LoadCameraActivity_detect(JNIEnv *env, jobject
     float resizeRatio = resize(img_gray, img_resize, 640);
 
     //-- Detect faces
-    ((CascadeClassifier *) cascade_classifier_face)->detectMultiScale( img_resize, faces, 1.1, 3, 0|CASCADE_SCALE_IMAGE, Size(30, 30) );
+    ((CascadeClassifier *) cascade_classifier_face)->detectMultiScale( img_resize, faces, 1.1, 3, 0|CASCADE_SCALE_IMAGE, Size(90, 90) );
 
 
     __android_log_print(ANDROID_LOG_DEBUG, (char *) "native-lib :: ",(char *) "face %d found ", faces.size());
