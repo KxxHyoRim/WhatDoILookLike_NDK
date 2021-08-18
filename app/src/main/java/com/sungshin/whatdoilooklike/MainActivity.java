@@ -12,6 +12,8 @@ import androidx.appcompat.app.AppCompatActivity;
 
 public class MainActivity extends AppCompatActivity {
 
+    static final int CASE_FROM_CAMERA = 0;
+    static final int CASE_FROM_GALLERY = 1;
     private ImageButton imgBtn_camera;
     private ImageButton imgBtn_gallery;
 
@@ -54,6 +56,7 @@ public class MainActivity extends AppCompatActivity {
                 Uri photoUri = data.getData();
                 Intent intent = new Intent(MainActivity.this, ResultActivity.class);
                 intent.putExtra("bitmap", String.valueOf(photoUri));
+                intent.putExtra("case_code", CASE_FROM_GALLERY);
                 startActivity(intent);
             }
         }

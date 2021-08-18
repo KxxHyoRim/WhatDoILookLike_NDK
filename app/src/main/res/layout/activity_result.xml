@@ -7,16 +7,183 @@
     android:background="@color/yellow_main">
 
     <LinearLayout
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
         android:layout_centerHorizontal="true"
-        android:layout_centerVertical="true">
+        android:background="@color/white">
+
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="너와 닮은 동물은!?"
+            android:textSize="35dp"
+            android:fontFamily="@font/crayon"
+            android:textColor="@color/black"
+            android:layout_gravity="center"
+            android:layout_marginTop="40dp"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="시크한 매력쟁이 고양이상"
+            android:textSize="15dp"
+            android:fontFamily="@font/nanum_squre_regular"
+            android:textStyle="bold"
+            android:textColor="@color/black"
+            android:layout_gravity="center"
+            android:layout_marginTop="40dp"/>
+
 
         <ImageView
+            android:layout_gravity="center_horizontal"
             android:id="@+id/imageView"
-            android:layout_width="250dp"
-            android:layout_height="250dp" />
+            android:layout_marginTop="15dp"
+            android:layout_marginBottom="15dp"
+            android:layout_width="200dp"
+            android:layout_height="200dp" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginRight="40dp"
+            android:layout_marginLeft="40dp"
+            android:orientation="vertical">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_marginBottom="5dp">
+
+                <TextView
+                    android:id="@+id/aniTV1"
+                    android:layout_width="0dp"
+                    android:layout_weight="1.7"
+                    android:layout_height="wrap_content"
+                    android:textSize="12dp"
+                    android:textColor="@color/black"
+                    android:fontFamily="@font/nanum_squre_regular"
+                    android:textStyle="bold"
+                    android:text="고양이상" />
+
+
+                <ProgressBar
+                    android:id="@+id/aniPB1"
+                    android:paddingLeft="10dp"
+                    android:paddingRight="10dp"
+                    android:max="100"
+                    android:progress="73"
+                    android:layout_weight="8"
+                    style="@style/Widget.AppCompat.ProgressBar.Horizontal"
+                    android:progressDrawable="@drawable/progressbar_custom_pink"
+                    android:layout_width="0dp"
+                    android:layout_height="12dp" />
+
+                <TextView
+                    android:id="@+id/aniPERC1"
+                    android:layout_weight="1.7"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/black"
+                    android:textSize="12dp"
+                    android:fontFamily="@font/nanum_squre_regular"
+                    android:textStyle="bold"
+                    android:text="87%" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_marginBottom="5dp">
+
+                <TextView
+                    android:id="@+id/aniTV2"
+                    android:layout_width="0dp"
+                    android:layout_weight="1.7"
+                    android:layout_height="wrap_content"
+                    android:textSize="12dp"
+                    android:textColor="@color/black"
+                    android:fontFamily="@font/nanum_squre_regular"
+                    android:textStyle="bold"
+                    android:text="강아지상" />
+
+
+                <ProgressBar
+                    android:id="@+id/aniPB2"
+                    android:paddingLeft="10dp"
+                    android:paddingRight="10dp"
+                    android:max="100"
+                    android:progress="19"
+                    android:layout_weight="8"
+                    style="@style/Widget.AppCompat.ProgressBar.Horizontal"
+                    android:progressDrawable="@drawable/progressbar_custom_blue"
+                    android:layout_width="0dp"
+                    android:layout_height="12dp" />
+
+                <TextView
+                    android:id="@+id/aniPERC2"
+                    android:layout_weight="1.7"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/black"
+                    android:textSize="12dp"
+                    android:fontFamily="@font/nanum_squre_regular"
+                    android:textStyle="bold"
+                    android:text="19%" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_marginBottom="5dp">
+
+                <TextView
+                    android:id="@+id/aniTV3"
+                    android:layout_width="0dp"
+                    android:layout_weight="1.7"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/black"
+                    android:textSize="12dp"
+                    android:fontFamily="@font/nanum_squre_regular"
+                    android:textStyle="bold"
+                    android:text="여우상" />
+
+
+                <ProgressBar
+                    android:id="@+id/aniPB3"
+                    android:paddingLeft="10dp"
+                    android:paddingRight="10dp"
+                    android:max="100"
+                    android:progress="9"
+                    android:layout_weight="8"
+                    style="@style/Widget.AppCompat.ProgressBar.Horizontal"
+                    android:progressDrawable="@drawable/progressbar_custom_mint"
+                    android:layout_width="0dp"
+                    android:layout_height="12dp" />
+
+                <TextView
+                    android:id="@+id/aniPERC3"
+                    android:layout_weight="1.7"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/black"
+                    android:textSize="12dp"
+                    android:fontFamily="@font/nanum_squre_regular"
+                    android:textStyle="bold"
+                    android:text="9%" />
+
+            </LinearLayout>
+
+
+
+        </LinearLayout>
 
 
 
@@ -24,6 +191,7 @@
             android:id="@+id/button"
             android:layout_width="match_parent"
             android:layout_height="50dp"
+            android:backgroundTint="@color/yellow_main"
             android:text="갤러리" />
 
     </LinearLayout>

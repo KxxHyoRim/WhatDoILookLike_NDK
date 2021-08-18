@@ -29,10 +29,11 @@ import java.io.InputStream;
 
 public class ResultActivity extends AppCompatActivity {
 
-    File tempFile;
-    ImageView imageview;
-    Button button;
-    Mat mat;
+    private File tempFile;
+    private ImageView imageview;
+    private Button galleryBtn;
+    private Mat mat;
+    private int case_code;
     static final int CASE_FROM_CAMERA = 0;
     static final int CASE_FROM_GALLERY = 1;
     private static final String TAG = "ResultActivity:";
@@ -48,10 +49,12 @@ public class ResultActivity extends AppCompatActivity {
         setContentView(R.layout.activity_result);
 
         imageview = (ImageView)findViewById(R.id.imageView);
-        button = (Button) findViewById(R.id.button);
+        galleryBtn = (Button) findViewById(R.id.button);
 
         Intent intent = getIntent();
-        int case_code = intent.getIntExtra("case_code", 0);
+        case_code = intent.getIntExtra("case_code", 0);
+        Log.e(TAG, "case_code" + case_code);
+
 
         if (case_code == CASE_FROM_CAMERA){
 
@@ -101,12 +104,13 @@ public class ResultActivity extends AppCompatActivity {
 
         }
 
-        button.setOnClickListener(new View.OnClickListener() {
+        galleryBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 // 갤러리로 이동
                 Intent intent = new Intent(Intent.ACTION_PICK);
                 intent.setType(MediaStore.Images.Media.CONTENT_TYPE);
+                case_code = CASE_FROM_GALLERY;
                 startActivityForResult(intent, 1);
             }
         });
