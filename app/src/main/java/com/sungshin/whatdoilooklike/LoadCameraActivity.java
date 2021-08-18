@@ -11,6 +11,7 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.ContextWrapper;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.res.AssetFileDescriptor;
 import android.content.res.AssetManager;
@@ -62,7 +63,7 @@ import java.util.List;
 public class LoadCameraActivity extends AppCompatActivity implements CameraBridgeViewBase.CvCameraViewListener2{
 
 
-    private static final String TAG="Camera";
+    private static final String TAG="LoadCameraActivity:";
 
     String baseDir;
     String packageName;
@@ -83,10 +84,12 @@ public class LoadCameraActivity extends AppCompatActivity implements CameraBridg
     Interpreter interpreter, face_detect_interpreter;
     static TextView textView;
     MsgHandler handler;
-//    private final int CELEB1 = 0;
-//    private final int CELEB2 = 1;
 
+    float[][][][] input;
+    float[][] output;
 
+    static final int CASE_FROM_CAMERA = 0;
+    static final int CASE_FROM_GALLERY = 1;
     private final int ANI0 = 0;
     private final int ANI1 = 1;
     private final int ANI2 = 2;
@@ -96,6 +99,8 @@ public class LoadCameraActivity extends AppCompatActivity implements CameraBridg
     private final int ANI6 = 6;
     private final int ANI7 = 7;
     private final int ETC =  8;
+
+    float[] animal_rate = new float[8];
 
     static private final String[] celebrity = {"황민현", "소희", "박보영", "백현","나연","박지훈",
             "주지훈","제니","김우빈","천우희","안재홍","라미란","최시원","하주연","진","이정은","결과없음"};
@@ -279,9 +284,6 @@ public class LoadCameraActivity extends AppCompatActivity implements CameraBridg
         inputMat = new Mat();
 //        rotateInputMat = mRotate.clone();
 
-
-
-
         if (mCameraId == 1){    // front camera
             // rotate camera frame with 180 degree
             Core.flip(mRgba, mRgba, -1);
@@ -291,14 +293,11 @@ public class LoadCameraActivity extends AppCompatActivity implements CameraBridg
             Core.flip(mGray, mGray, 0);
         }
 
-
 //        if (mCameraId == 1) {    // front camera
 //            Core.flip(mRotate, mRotate, 1);
 //            Core.flip(mRotate, mRotate, 0);
 //            Core.flip(mRotate, mRotate, -1);
 //        }
-
-
 
          //예슬 코드 원본
         detect(cascadeClassifier_face, mRgba.getNativeObjAddr(), mRgba.getNativeObjAddr(), inputMat.getNativeObjAddr());
@@ -373,6 +372,35 @@ public class LoadCameraActivity extends AppCompatActivity implements CameraBridg
         // convert image from RGBA to BGRA
         Imgproc.cvtColor(save_mat, save_mat, Imgproc.COLOR_RGBA2BGRA);
 
+
+        if(input.empty()){
+            Log.e(TAG, "얼굴 검출이 되지 않음!");
+//            msg.what = ETC;
+        }
+        else{
+            Message msg = handler.obtainMessage();
+
+            int result = doInference(input);
+            Log.e(TAG,"Result After DoInference = " + result );
+            Log.e(TAG, "crop 후 input image 사이즈:" + input.width() +" * " +input.height());
+
+            /** Category 추가 방법
+             * 1. celebrity 이름의 배열 수정 : 결과 없음은 마지막 인덱스로 지정
+             * 2. 바로 아래의 else if 문 추가
+             * */
+            if(result == 0.0){  msg.what = ANI0 ; }
+            else if(result == 1.0){ msg.what = ANI1 ;}
+            else if(result == 2.0){ msg.what = ANI2 ;}
+            else if(result == 3.0){ msg.what = ANI3 ;}
+            else if(result == 4.0){ msg.what = ANI4 ;}
+            else if(result == 5.0){ msg.what = ANI5 ;}
+            else if(result == 6.0){ msg.what = ANI6 ;}
+            else if(result == 7.0){ msg.what = ANI7 ;}
+
+            handler.sendMessage(msg);
+        }
+
+
         if (take_image == 1){
 
             /** (추후 수정) 촬영 버튼 눌렀을 때 이미지 저장*
@@ -380,7 +408,6 @@ public class LoadCameraActivity extends AppCompatActivity implements CameraBridg
              *  갤러리에서는 확인이 불가능함
              *  경로 수정으로 해결(미디어 파일 형식으로 저장)
              */
-
 
             // create new folder
             File folder = new File(Environment.getExternalStorageDirectory().getPath() + "/WhatDoIlookLike" );
@@ -398,35 +425,20 @@ public class LoadCameraActivity extends AppCompatActivity implements CameraBridg
             Imgcodecs.imwrite(fileName, save_mat);
 
             take_image = 0;
-        }
-
-        if(input.empty()){
-            Log.e(TAG, "얼굴 검출이 되지 않음!");
-//            msg.what = ETC;
-        }
-        else{
-            Message msg = handler.obtainMessage();
-
-            int result = doInference(input);
-            Log.e(TAG,"Result After DoInference = " + result );
-            Log.e(TAG, "crop 후 input image 사이즈:" + input.width() +" * " +input.height());
 
 
+            Long imgAddress = save_mat.getNativeObjAddr();
 
-            /** Category 추가 방법
-             * 1. celebrity 이름의 배열 수정 : 결과 없음은 마지막 인덱스로 지정
-             * 2. 바로 아래의 else if 문 추가
-             * */
-            if(result == 0.0){  msg.what = ANI0 ; }
-            else if(result == 1.0){ msg.what = ANI1 ;}
-            else if(result == 2.0){ msg.what = ANI2 ;}
-            else if(result == 3.0){ msg.what = ANI3 ;}
-            else if(result == 4.0){ msg.what = ANI4 ;}
-            else if(result == 5.0){ msg.what = ANI5 ;}
-            else if(result == 6.0){ msg.what = ANI6 ;}
-            else if(result == 7.0){ msg.what = ANI7 ;}
-
-            handler.sendMessage(msg);
+            Intent intent = new Intent(getApplicationContext(), ResultActivity.class);
+            Log.e(TAG, "Create Intent");
+            intent.putExtra("Image", imgAddress);
+            intent.putExtra("animal_rate", animal_rate);
+            intent.putExtra("output", output);
+            intent.putExtra("celebrity", celebrity);
+            intent.putExtra("animal", animal);
+            intent.putExtra("case_code", CASE_FROM_CAMERA);
+            startActivity(intent);
+            finish();
 
         }
         return take_image;
@@ -458,8 +470,8 @@ public class LoadCameraActivity extends AppCompatActivity implements CameraBridg
 
     private int doInference(Mat image){
 
-        float[][][][] input = new float[1][96][96][1];
-        float[][] output = new float[1][16];
+        input = new float[1][96][96][1];
+        output = new float[1][16];
 
         Imgproc.resize(image, image, new Size(96, 96));
 
@@ -485,7 +497,6 @@ public class LoadCameraActivity extends AppCompatActivity implements CameraBridg
         // 닮은꼴 동물 찾기
 
         // 1) 배열 선언 및 초기화
-        float[] animal_rate = new float[8];
         for (int i = 0 ; i < 8; i++){ animal_rate[i] = 0.0f; }
 
         // 2) 동물별 비율 구하기

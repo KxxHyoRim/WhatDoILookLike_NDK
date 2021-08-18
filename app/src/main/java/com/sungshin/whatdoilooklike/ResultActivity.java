@@ -9,6 +9,7 @@ import android.media.ExifInterface;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -19,18 +20,22 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import org.opencv.android.Utils;
 import org.opencv.core.Mat;
+import org.opencv.core.Size;
 
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 
-public class LoadGalleryActivity extends AppCompatActivity {
+public class ResultActivity extends AppCompatActivity {
 
     File tempFile;
     ImageView imageview;
     Button button;
     Mat mat;
+    static final int CASE_FROM_CAMERA = 0;
+    static final int CASE_FROM_GALLERY = 1;
+    private static final String TAG = "ResultActivity:";
 
     static {
         System.loadLibrary("opencv_java4");
@@ -45,32 +50,56 @@ public class LoadGalleryActivity extends AppCompatActivity {
         imageview = (ImageView)findViewById(R.id.imageView);
         button = (Button) findViewById(R.id.button);
 
-        Uri uri = Uri.parse(getIntent().getStringExtra("bitmap"));
-        Uri mPhotoUri = Uri.parse(getRealPathFromURI(uri));
+        Intent intent = getIntent();
+        int case_code = intent.getIntExtra("case_code", 0);
 
-        ExifInterface exif = null;
-        try {
-            exif = new ExifInterface(mPhotoUri.getPath());
-        } catch (IOException e) {
-            e.printStackTrace();
+        if (case_code == CASE_FROM_CAMERA){
+
+            Log.e(TAG, "Case_from_Camera");
+
+            // get Data from Intent
+            long addr = intent.getLongExtra("Image", 0);
+            Mat tempImg = new Mat(addr);
+            Mat img = tempImg.clone();
+
+            // Convert Mat to Bitmap to display 'captured Image' on ImageView
+            Bitmap bitmap;
+            bitmap = Bitmap.createBitmap(img.cols(), img.rows(), Bitmap.Config.ARGB_8888);
+            Utils.matToBitmap(img, bitmap);
+            imageview.setImageBitmap(bitmap);
+
+
         }
-        int orientation = exif.getAttributeInt(ExifInterface.TAG_ORIENTATION,
-                ExifInterface.ORIENTATION_UNDEFINED);
 
-        InputStream in = null;
-        try {
-            in = getContentResolver().openInputStream(uri);
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
+        if (case_code == CASE_FROM_GALLERY){
+
+            Uri uri = Uri.parse(getIntent().getStringExtra("bitmap"));
+            Uri mPhotoUri = Uri.parse(getRealPathFromURI(uri));
+
+            ExifInterface exif = null;
+            try {
+                exif = new ExifInterface(mPhotoUri.getPath());
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            int orientation = exif.getAttributeInt(ExifInterface.TAG_ORIENTATION,
+                    ExifInterface.ORIENTATION_UNDEFINED);
+
+            InputStream in = null;
+            try {
+                in = getContentResolver().openInputStream(uri);
+            } catch (FileNotFoundException e) {
+                e.printStackTrace();
+            }
+            Bitmap bitmap = BitmapFactory.decodeStream(in);
+            bitmap = rotateBitmap(bitmap, orientation);
+
+            //갤러리 이미지 Mat
+            mat = new Mat();
+            Utils.bitmapToMat(bitmap, mat);
+            imageview.setImageBitmap(bitmap);
+
         }
-        Bitmap bitmap = BitmapFactory.decodeStream(in);
-        bitmap = rotateBitmap(bitmap, orientation);
-
-        //갤러리 이미지 Mat
-        mat = new Mat();
-        Utils.bitmapToMat(bitmap, mat);
-
-        imageview.setImageBitmap(bitmap);
 
         button.setOnClickListener(new View.OnClickListener() {
             @Override

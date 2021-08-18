@@ -52,7 +52,7 @@ public class MainActivity extends AppCompatActivity {
             // Make sure the request was successful
             if (resultCode == RESULT_OK) {
                 Uri photoUri = data.getData();
-                Intent intent = new Intent(MainActivity.this, LoadGalleryActivity.class);
+                Intent intent = new Intent(MainActivity.this, ResultActivity.class);
                 intent.putExtra("bitmap", String.valueOf(photoUri));
                 startActivity(intent);
             }
