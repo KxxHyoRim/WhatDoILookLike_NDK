@@ -32,9 +32,9 @@
     <application
         android:allowBackup="true"
         android:requestLegacyExternalStorage="true"
-        android:icon="@mipmap/ic_launcher"
+        android:icon="@mipmap/ic_crayon_icon"
         android:label="@string/app_name"
-        android:roundIcon="@mipmap/ic_launcher_round"
+        android:roundIcon="@mipmap/ic_crayon_icon"
         android:supportsRtl="true"
         android:theme="@style/Theme.WhatDoILookLike">
 
