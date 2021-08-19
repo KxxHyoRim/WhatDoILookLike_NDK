@@ -35,6 +35,7 @@ public class ResultActivity extends AppCompatActivity {
     private File tempFile;
     private ImageView imageview;
     private Button galleryBtn, cameraBtn;
+    private TextView celeb_list, celeb;
     private Mat mat;
     private int case_code;
     static final int CASE_FROM_CAMERA = 0;
@@ -63,6 +64,17 @@ public class ResultActivity extends AppCompatActivity {
             "말괄량이 토끼상", "매혹덩어리 여우상", "크와아앙 공룡상", "포근하고 듬직한 곰상",
     "이국적인 매력의 말상", "세상 행복한 쿼카상"};
 
+    private String celebrity_list[] = {
+            "고양이상 : 소희, 한예슬, 경리, 오연서, 김희철, 텐",
+            "강아지상 : 박보영, 한가인, 손예진, 한지민, 송중기, 백현",
+            "토끼상 : 나연, 수지, 정국, 워너원 박지훈, 안형섭",
+            "여우상 : 이준기, 박시후, 서인국, 육성재, 박시연",
+            "공룡상 : 공유, 김우빈, 종현, 원필, 엠버",
+            "곰상 : 김태우, 슬기, 조진웅, 안재홍, 라미란",
+            "말상 : 최시원, 이상이, 김성수, 하주연",
+            "쿼카상 : 홍현희, 햇쮸, 진, 이정은",
+    };
+
     static {
         System.loadLibrary("opencv_java4");
         System.loadLibrary("native-lib");
@@ -86,7 +98,8 @@ public class ResultActivity extends AppCompatActivity {
         aniPERC1 = (TextView) findViewById(R.id.aniPERC1);
         aniPERC2 = (TextView) findViewById(R.id.aniPERC2);
         aniPERC3 = (TextView) findViewById(R.id.aniPERC3);
-
+        celeb = (TextView) findViewById(R.id.celeb);
+        celeb_list = (TextView) findViewById(R.id.celeb_list);
 
         animal_rate = new float[8];
         celebrity_rate = new float[16];
@@ -268,6 +281,9 @@ public class ResultActivity extends AppCompatActivity {
         aniPERC1.setVisibility(View.INVISIBLE);
         aniPERC2.setVisibility(View.INVISIBLE);
         aniPERC3.setVisibility(View.INVISIBLE);
+        celeb_list.setVisibility(View.INVISIBLE);
+        celeb.setVisibility(View.INVISIBLE);
+
 
     }
 
@@ -285,6 +301,7 @@ public class ResultActivity extends AppCompatActivity {
         aniPERC1.setText(ani1_rate + "%");
         aniPERC2.setText(ani2_rate + "%");
         aniPERC3.setText(ani3_rate + "%");
+        celeb_list.setText(celebrity_list[ani1]);
     }
 
     private String getRealPathFromURI(Uri contentURI) {
