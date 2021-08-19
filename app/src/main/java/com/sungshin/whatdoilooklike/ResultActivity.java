@@ -215,8 +215,6 @@ public class ResultActivity extends AppCompatActivity {
             Utils.matToBitmap(img, bitmap);
             imageview.setImageBitmap(bitmap);
 
-
-
             if (isFaceRecognized == 0){  markAsNoFace(); }
             if (isFaceRecognized == 1){
 
@@ -307,7 +305,9 @@ public class ResultActivity extends AppCompatActivity {
             }
 
             // Display out Mat image
-            imageview.setImageBitmap(bitmap);
+            Bitmap result_bitmap = Bitmap.createBitmap(out.cols(), out.rows(), Bitmap.Config.ARGB_8888);
+            Utils.matToBitmap(out, result_bitmap);
+            imageview.setImageBitmap(result_bitmap);
 
         }
 
@@ -511,7 +511,12 @@ public class ResultActivity extends AppCompatActivity {
 //                else if(result == 7.0){ msg.what = ANI7 ;}
 
                 }
-                imageview.setImageBitmap(bitmap);
+                //imageview.setImageBitmap(bitmap);
+
+                // Display out Mat image
+                Bitmap result_bitmap = Bitmap.createBitmap(out.cols(), out.rows(), Bitmap.Config.ARGB_8888);
+                Utils.matToBitmap(out, result_bitmap);
+                imageview.setImageBitmap(result_bitmap);
             }
         }
     }

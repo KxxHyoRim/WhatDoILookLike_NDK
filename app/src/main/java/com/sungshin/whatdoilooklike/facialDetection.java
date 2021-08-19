@@ -321,9 +321,11 @@ public class facialDetection {
 //        // rotate back it -90 degree
 //        Core.flip(mat_image.t(),mat_image,0);
 //        return mat_image;
+        if(environment==0){
         Mat a=mat_image.t();
         Core.flip(a,mat_image,1);
         a.release();
+        }
 
         // do all process here
         // face detection
@@ -351,6 +353,7 @@ public class facialDetection {
         // create faceArray
         Rect[] faceArray=faces.toArray();
         // loop through each face in faceArray
+        Log.e("FacialDetector", "faceArray 사이즈: " + String.valueOf(faceArray.length));
 
         for(int i=0;i<faceArray.length;i++){
             // if you want to draw face on frame
@@ -476,9 +479,14 @@ public class facialDetection {
 
         // but returned mat_image should be same as passing mat
         // rotate back it -90 degree
-        Mat b = mat_image.t();
-        Core.flip(b,mat_image,0);
-        b.release();
+        if(environment==0) {
+            Mat b = mat_image.t();
+            Core.flip(b, mat_image, 0);
+            b.release();
+        }
+        else if(environment==1){
+            Core.flip(mat_image,mat_image,1);
+        }
         return mat_image;
     }
 
