@@ -416,7 +416,7 @@ public class facialDetection {
                 // draw on cropped_rgb not on cropped
                 //              input/output     center                                  radius        color                fill circle
 
-                Imgproc.circle(cropped_rgba,new Point((x_val*1.07-4)*x_scale,(y_val-6)*y_scale),1,new Scalar(0,255,0,255),-1);
+                Imgproc.circle(cropped_rgba,new Point((x_val*1.07-4)*x_scale,(y_val-6)*y_scale),3,new Scalar(0,255,0,255),-1);
                 //Imgproc.circle(cropped_rgba,new Point(x_val*x_scale,y_val*y_scale),3,new Scalar(0,255,0,255),-1);
                 //Imgproc.circle(cropped_rgba,new Point((x_val)*x_scale,(y_val)*y_scale),3,new Scalar(0,255,0,255),-1);
 
@@ -434,7 +434,7 @@ public class facialDetection {
                 // draw on cropped_rgb not on cropped
                 //              input/output     center                                  radius        color                fill circle
 
-                Imgproc.circle(cropped_rgba,new Point((x_val*1.07+1.5)*x_scale,(y_val-6)*y_scale),1,new Scalar(0,255,0,255),-1);
+                Imgproc.circle(cropped_rgba,new Point((x_val*1.07+1.5)*x_scale,(y_val-6)*y_scale),3,new Scalar(0,255,0,255),-1);
                 //Imgproc.circle(cropped_rgba,new Point(x_val*x_scale,y_val*y_scale),3,new Scalar(0,255,0,255),-1);
                 //Imgproc.circle(cropped_rgba,new Point((x_val)*x_scale,(y_val)*y_scale),3,new Scalar(0,255,0,255),-1);
 
@@ -452,7 +452,7 @@ public class facialDetection {
                 // draw on cropped_rgb not on cropped
                 //              input/output     center                                  radius        color                fill circle
 
-                Imgproc.circle(cropped_rgba,new Point((x_val)*x_scale,(y_val+2.5)*y_scale),1,new Scalar(0,255,0,255),-1);
+                Imgproc.circle(cropped_rgba,new Point((x_val)*x_scale,(y_val+2.5)*y_scale),3,new Scalar(0,255,0,255),-1);
                 //Imgproc.circle(cropped_rgba,new Point(x_val*x_scale,y_val*y_scale),3,new Scalar(0,255,0,255),-1);
                 //Imgproc.circle(cropped_rgba,new Point((x_val)*x_scale,(y_val)*y_scale),3,new Scalar(0,255,0,255),-1);
 
