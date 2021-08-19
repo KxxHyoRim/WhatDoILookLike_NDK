@@ -74,7 +74,7 @@ public class LoadCameraActivity extends AppCompatActivity implements CameraBridg
 
     private Mat mRgba;
     private Mat mGray;
-    private Mat inputMat;
+    public static Mat inputMat;
     private facialDetection facialDetection;
 //    private Mat mRotate;
 //    private Mat rotateInputMat;
@@ -367,12 +367,11 @@ public class LoadCameraActivity extends AppCompatActivity implements CameraBridg
          //예슬 코드 원본
         detect(cascadeClassifier_face, mRgba.getNativeObjAddr(), mRgba.getNativeObjAddr(), inputMat.getNativeObjAddr());
 
-//        // 변형
-//        detect(cascadeClassifier_face, mRotate.getNativeObjAddr(), mRotate.getNativeObjAddr(), rotateInputMat.getNativeObjAddr());
-        take_image = take_picture_function_rgb(take_image, mRgba, inputMat);
         Mat out=new Mat();
         // Imgproc.cvtColor(mRgba,mRgba,Imgproc.COLOR_RGBA2RGB);
-        out=facialDetection.recognizeImage(mRgba, animalImg[animalIdx], animalROI[animalIdx]);
+        out = facialDetection.recognizeImage(mRgba, animalImg[animalIdx], animalROI[animalIdx]);
+
+        take_image = take_picture_function_rgb(take_image, mRgba, inputMat);
         // Display out Mat image
         return out;
 //        return mRgba;
@@ -439,7 +438,7 @@ public class LoadCameraActivity extends AppCompatActivity implements CameraBridg
         Core.flip(mRgba.t(), save_mat, 1);
 
         // convert image from RGBA to BGRA
-        Imgproc.cvtColor(save_mat, save_mat, Imgproc.COLOR_RGBA2BGRA);
+//        Imgproc.cvtColor(save_mat, save_mat, Imgproc.COLOR_RGBA2BGRA);
 
 
         if(input.empty()){

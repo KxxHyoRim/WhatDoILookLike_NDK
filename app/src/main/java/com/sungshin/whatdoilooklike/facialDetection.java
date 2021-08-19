@@ -50,6 +50,8 @@ public class facialDetection {
     public int animalIdx = 0;
     private Mat animalImg = new Mat();
 
+    public native void crop(Rect rect, long matAddrInput, long nativeObjAddr);
+
 //    public void bmp2Mat() {
 //        Drawable vectorDrawable = VectorDrawableCompat.create(facialDetection.this.get(), R.drawable.logo,  getContext().getTheme());
 //        Bitmap myLogo = ((BitmapDrawable) vectorDrawable).getBitmap();
@@ -353,6 +355,7 @@ public class facialDetection {
         for(int i=0;i<faceArray.length;i++){
             // if you want to draw face on frame
             //                image      // starting point  ending point        green Color         thickness
+            Imgproc.rectangle(mat_image,faceArray[i].tl(),faceArray[i].br(),new Scalar(0,255,0,255),2);
             int x1 = (int) faceArray[i].tl().x;
             int y1 = (int) faceArray[i].tl().y;
 
@@ -371,10 +374,12 @@ public class facialDetection {
             int h1 = y2-y1;
 
             Rect face_roi = new Rect(x1, y1, w1, h1);
+            //crop(face_roi,mat_image.getNativeObjAddr(),LoadCameraActivity.inputMat.getNativeObjAddr());
             // this was important for face cropping so check
             // cropped grayscale image
             // cropped rgba image
             Mat cropped_rgba=new Mat(mat_image,face_roi);
+            LoadCameraActivity.inputMat = cropped_rgba.clone();
             //Log.e("FacialDetector","370");
 
             Mat resizeImage = new Mat();

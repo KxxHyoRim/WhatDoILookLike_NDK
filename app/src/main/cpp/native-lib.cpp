@@ -107,4 +107,17 @@ Java_com_sungshin_whatdoilooklike_LoadCameraActivity_detect(JNIEnv *env, jobject
         img_crop = img_input(rect & bounds);
     }
 
+
+
+}extern "C"
+JNIEXPORT void JNICALL
+Java_com_sungshin_whatdoilooklike_facialDetection_crop(JNIEnv *env, jobject thiz, Rect_<int> rect,
+                                                       jlong mat_addr_input,
+                                                       jlong native_obj_addr) {
+    // TODO: implement crop()
+    Mat &img_crop = *(Mat *) native_obj_addr;
+    Mat &img_input = *(Mat *) mat_addr_input;
+
+    Rect bounds(0,0,img_input.cols,img_input.rows);
+    img_crop = img_input( rect & bounds);
 }
