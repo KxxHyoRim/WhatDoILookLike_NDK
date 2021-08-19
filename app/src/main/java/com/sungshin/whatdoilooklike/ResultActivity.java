@@ -62,32 +62,34 @@ public class ResultActivity extends AppCompatActivity {
 
         Intent intent = getIntent();
         case_code = intent.getIntExtra("case_code", 0);
-        animal_rate = intent.getFloatArrayExtra("animal_rate");
-        celebrity_rate = intent.getFloatArrayExtra("celebrity_rate");
-        animal = intent.getStringArrayExtra("animal");
-        celebrity = intent.getStringArrayExtra("celebrity");
-
-        int ani1 = find_max_idx();
-        float ani1_rate = animal_rate[ani1];
-        Log.e("Animal Rate::", animal[ani1]);
-        Log.e("Animal Rate:: ", String.valueOf(ani1_rate * 100));
-        animal_rate[ani1] = 0;
-
-        int ani2 = find_max_idx();
-        float ani2_rate =  animal_rate[ani2];
-        Log.e("Animal Rate::", animal[ani2]);
-        Log.e("Animal Rate:: ", String.valueOf(ani2_rate * 100));
-        animal_rate[ani2] = 0;
-
-
-        int ani3 = find_max_idx();
-        float ani3_rate = animal_rate[ani3];
-        Log.e("Animal Rate::", animal[ani3]);
-        Log.e("Animal Rate:: ", String.valueOf(ani3_rate * 100));
-        animal_rate[ani3] = 0;
 
 
         if (case_code == CASE_FROM_CAMERA){
+
+            animal_rate = intent.getFloatArrayExtra("animal_rate");
+            celebrity_rate = intent.getFloatArrayExtra("celebrity_rate");
+            animal = intent.getStringArrayExtra("animal");
+            celebrity = intent.getStringArrayExtra("celebrity");
+
+            int ani1 = find_max_idx();
+            int ani1_rate = (int) (animal_rate[ani1] * 100);
+            Log.e("Animal Rate::", animal[ani1]);
+            Log.e("Animal Rate:: ", String.valueOf(ani1_rate));
+            animal_rate[ani1] = 0;
+
+            int ani2 = find_max_idx();
+            int ani2_rate =(int)   (animal_rate[ani2] * 100);
+            Log.e("Animal Rate::", animal[ani2]);
+            Log.e("Animal Rate:: ", String.valueOf(ani2_rate ));
+            animal_rate[ani2] = 0;
+
+
+            int ani3 = find_max_idx();
+            int ani3_rate =(int) (animal_rate[ani3] * 100);
+            Log.e("Animal Rate::", animal[ani3]);
+            Log.e("Animal Rate:: ", String.valueOf(ani3_rate));
+            animal_rate[ani3] = 0;
+
 
             Log.e(TAG, "Case_from_Camera");
 
