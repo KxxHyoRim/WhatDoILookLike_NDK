@@ -39,8 +39,8 @@
         <ImageView
             android:layout_gravity="center_horizontal"
             android:id="@+id/imageView"
-            android:layout_marginTop="15dp"
-            android:layout_marginBottom="15dp"
+            android:layout_marginTop="30dp"
+            android:layout_marginBottom="30dp"
             android:scaleType="centerCrop"
             android:layout_width="200dp"
             android:layout_height="200dp" />
@@ -182,19 +182,74 @@
 
             </LinearLayout>
 
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="닮은꼴 연예인 여기 넣어줘 혜원아"
+                android:textColor="@color/black"
+                android:fontFamily="@font/nanum_squre_regular"
+                />
+
 
 
         </LinearLayout>
 
 
+    </LinearLayout>
 
-        <Button
-            android:id="@+id/button"
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:paddingLeft="15dp"
+        android:paddingRight="15dp"
+        android:paddingBottom="25dp"
+        android:orientation="vertical">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="다시 검사하기 ↓ "
+            android:textColor="@color/black"
+            android:fontFamily="@font/crayon"
+            android:textSize="15dp"
+            android:layout_marginLeft="5dp"/>
+
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="50dp"
-            android:backgroundTint="@color/yellow_main"
-            android:text="갤러리" />
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginTop="10dp"
+            >
+
+
+            <Button
+                android:id="@+id/buttonCamera"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="50dp"
+                android:backgroundTint="#FFE79B"
+                android:textColor="@color/black"
+                android:fontFamily="@font/crayon"
+                android:textSize="15dp"
+                android:text="카메라" />
+
+            <Button
+                android:id="@+id/button"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="50dp"
+                android:backgroundTint="#FFE79B"
+                android:textColor="@color/black"
+                android:fontFamily="@font/crayon"
+                android:textSize="15dp"
+                android:text="갤러리" />
+
+
+        </LinearLayout>
+
 
     </LinearLayout>
+
 
 </RelativeLayout>

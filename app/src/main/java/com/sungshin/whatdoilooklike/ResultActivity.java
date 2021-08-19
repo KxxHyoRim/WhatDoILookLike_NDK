@@ -43,7 +43,7 @@ public class ResultActivity extends AppCompatActivity {
 
     private File tempFile;
     private ImageView imageview;
-    private Button galleryBtn;
+    private Button galleryBtn, cameraBtn;
     private Mat mat;
     private int case_code;
     static final int CASE_FROM_CAMERA = 0;
@@ -64,6 +64,10 @@ public class ResultActivity extends AppCompatActivity {
     protected TextView aniPERC2;
     protected TextView aniPERC3;
     private int isFaceRecognized;
+    int ani1, ani2, ani3;
+    int ani1_rate, ani2_rate, ani3_rate;
+
+
     private String animal_result[] = {"시크도도 고양이상", "귀염뽀짝 강아지상",
             "말괄량이 토끼상", "매혹덩어리 여우상", "크와아앙 공룡상", "포근하고 듬직한 곰상",
     "이국적인 매력의 말상", "세상 행복한 쿼카상"};
@@ -144,6 +148,7 @@ public class ResultActivity extends AppCompatActivity {
         animal_result_TV = (TextView)findViewById(R.id.animal_result_TV);
         imageview = (ImageView)findViewById(R.id.imageView);
         galleryBtn = (Button) findViewById(R.id.button);
+        cameraBtn = (Button) findViewById(R.id.buttonCamera);
         aniTV1 = (TextView) findViewById(R.id.aniTV1);
         aniTV2 = (TextView) findViewById(R.id.aniTV2);
         aniTV3 = (TextView) findViewById(R.id.aniTV3);
@@ -198,53 +203,30 @@ public class ResultActivity extends AppCompatActivity {
 
 
 
-            if (isFaceRecognized == 0){
+            if (isFaceRecognized == 0){  markAsNoFace(); }
+            if (isFaceRecognized == 1){
 
-                Log.e("isFaceRecognized", "얼굴 없음");
-                animal_result_TV.setText("얼굴을 찾지 못했어요:(");
-                aniTV1.setVisibility(View.INVISIBLE);
-                aniTV2.setVisibility(View.INVISIBLE);
-                aniTV3.setVisibility(View.INVISIBLE);
-                aniPB1.setVisibility(View.INVISIBLE);
-                aniPB2.setVisibility(View.INVISIBLE);
-                aniPB3.setVisibility(View.INVISIBLE);
-                aniPERC1.setVisibility(View.INVISIBLE);
-                aniPERC2.setVisibility(View.INVISIBLE);
-                aniPERC3.setVisibility(View.INVISIBLE);
-
-            } else {
-                Log.e("isFaceRecognized", "얼굴 있음");
-
-                int ani1 = find_max_idx();
-                int ani1_rate = (int) (animal_rate[ani1] * 100);
+                /** ani1 이 나의 동물상 index임 */
+                ani1 = find_max_idx();
+                ani1_rate = (int) (animal_rate[ani1] * 100);
                 Log.e("Animal Rate::", animal[ani1]);
                 Log.e("Animal Rate:: ", String.valueOf(ani1_rate));
                 animal_rate[ani1] = 0;
 
-                int ani2 = find_max_idx();
-                int ani2_rate =(int)   (animal_rate[ani2] * 100);
+                ani2 = find_max_idx();
+                ani2_rate = (int)   (animal_rate[ani2] * 100);
                 Log.e("Animal Rate::", animal[ani2]);
                 Log.e("Animal Rate:: ", String.valueOf(ani2_rate ));
                 animal_rate[ani2] = 0;
 
 
-                int ani3 = find_max_idx();
-                int ani3_rate =(int) (animal_rate[ani3] * 100);
+                ani3 = find_max_idx();
+                ani3_rate = (int) (animal_rate[ani3] * 100);
                 Log.e("Animal Rate::", animal[ani3]);
                 Log.e("Animal Rate:: ", String.valueOf(ani3_rate));
                 animal_rate[ani3] = 0;
 
-                animal_result_TV.setText(animal_result[ani1]);
-                aniTV1.setText(animal[ani1]);
-                aniTV2.setText(animal[ani2]);
-                aniTV3.setText(animal[ani3]);
-                aniPB1.setProgress(ani1_rate);
-                aniPB2.setProgress(ani2_rate);
-                aniPB3.setProgress(ani3_rate);
-                aniPERC1.setText(ani1_rate + "%");
-                aniPERC2.setText(ani2_rate + "%");
-                aniPERC3.setText(ani3_rate + "%");
-            }
+                markFaceExist(); }
 
 
         }
@@ -323,6 +305,16 @@ public class ResultActivity extends AppCompatActivity {
                 intent.setType(MediaStore.Images.Media.CONTENT_TYPE);
                 case_code = CASE_FROM_GALLERY;
                 startActivityForResult(intent, 1);
+            }
+        });
+
+
+        cameraBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(ResultActivity.this, LoadCameraActivity.class);
+                startActivity(intent);
+                finish();
             }
         });
     }
@@ -508,6 +500,40 @@ public class ResultActivity extends AppCompatActivity {
                 imageview.setImageBitmap(bitmap);
             }
         }
+    }
+
+    private void markAsNoFace(){
+
+        Log.e("isFaceRecognized", "얼굴 없음");
+        animal_result_TV.setText("얼굴을 찾지 못했어요:(");
+        aniTV1.setVisibility(View.INVISIBLE);
+        aniTV2.setVisibility(View.INVISIBLE);
+        aniTV3.setVisibility(View.INVISIBLE);
+        aniPB1.setVisibility(View.INVISIBLE);
+        aniPB2.setVisibility(View.INVISIBLE);
+        aniPB3.setVisibility(View.INVISIBLE);
+        aniPERC1.setVisibility(View.INVISIBLE);
+        aniPERC2.setVisibility(View.INVISIBLE);
+        aniPERC3.setVisibility(View.INVISIBLE);
+
+    }
+
+    private void markFaceExist(){
+
+        Log.e("isFaceRecognized", "얼굴 있음");
+
+
+
+        animal_result_TV.setText(animal_result[ani1]);
+        aniTV1.setText(animal[ani1]);
+        aniTV2.setText(animal[ani2]);
+        aniTV3.setText(animal[ani3]);
+        aniPB1.setProgress(ani1_rate);
+        aniPB2.setProgress(ani2_rate);
+        aniPB3.setProgress(ani3_rate);
+        aniPERC1.setText(ani1_rate + "%");
+        aniPERC2.setText(ani2_rate + "%");
+        aniPERC3.setText(ani3_rate + "%");
     }
 
     private String getRealPathFromURI(Uri contentURI) {
