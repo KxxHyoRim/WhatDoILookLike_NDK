@@ -440,14 +440,14 @@ public class LoadCameraActivity extends AppCompatActivity implements CameraBridg
         // convert image from RGBA to BGRA
 //        Imgproc.cvtColor(save_mat, save_mat, Imgproc.COLOR_RGBA2BGRA);
 
+        Message msg = handler.obtainMessage();
 
         if(input.empty()){
             Log.e(TAG, "얼굴 검출이 되지 않음!");
-//            isFaceRecognized = 0;
-//            msg.what = ETC;
+            isFaceRecognized = 0;
+            msg.what = ETC;
         }
         else{
-            Message msg = handler.obtainMessage();
 
             isFaceRecognized = 1;
 
@@ -468,8 +468,8 @@ public class LoadCameraActivity extends AppCompatActivity implements CameraBridg
             else if(result == 6.0){ msg.what = ANI6 ;}
             else if(result == 7.0){ msg.what = ANI7 ;}
 
-            handler.sendMessage(msg);
         }
+        handler.sendMessage(msg);
 
 
         if (take_image == 1){
