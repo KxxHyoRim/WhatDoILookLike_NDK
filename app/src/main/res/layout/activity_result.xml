@@ -28,7 +28,7 @@
             android:layout_height="wrap_content"
             android:id="@+id/animal_result_TV"
             android:text="시크한 매력쟁이 고양이상"
-            android:textSize="15dp"
+            android:textSize="17dp"
             android:fontFamily="@font/nanum_squre_regular"
             android:textStyle="bold"
             android:textColor="@color/black"
@@ -185,12 +185,49 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="닮은꼴 연예인 여기 넣어줘 혜원아"
+                android:textSize="14dp"
+                android:textStyle="bold"
+                android:layout_marginTop="30dp"
+                android:layout_gravity="center_horizontal"
+                android:text="나랑 가장 닮은 연예인은?"
                 android:textColor="@color/black"
-                android:fontFamily="@font/nanum_squre_regular"
-                />
+                android:fontFamily="@font/nanum_squre_regular" />
 
+            <TextView
+                android:id="@+id/celeb_most"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="12dp"
+                android:textStyle="bold"
+                android:layout_marginTop="10dp"
+                android:layout_gravity="center_horizontal"
+                android:text="닮은꼴 연예인 리스트"
+                android:textColor="@color/black"
+                android:fontFamily="@font/nanum_squre_regular"/>
 
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="14dp"
+                android:textStyle="bold"
+                android:layout_marginTop="30dp"
+                android:layout_gravity="center_horizontal"
+                android:text="나와 닮은 연예인은?"
+                android:textColor="@color/black"
+                android:fontFamily="@font/nanum_squre_regular" />
+
+            <TextView
+                android:id="@+id/celeb_list"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="12dp"
+                android:textStyle="bold"
+                android:layout_marginTop="10dp"
+                android:layout_marginBottom="20dp"
+                android:layout_gravity="center_horizontal"
+                android:text="닮은꼴 연예인 리스트"
+                android:textColor="@color/black"
+                android:fontFamily="@font/nanum_squre_regular"/>
 
         </LinearLayout>
 
@@ -212,6 +249,7 @@
             android:text="다시 검사하기 ↓ "
             android:textColor="@color/black"
             android:fontFamily="@font/crayon"
+            android:textStyle="bold"
             android:textSize="15dp"
             android:layout_marginLeft="5dp"/>
 
@@ -219,8 +257,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
-            android:layout_marginTop="10dp"
-            >
+            android:layout_marginTop="10dp" >
 
 
             <Button

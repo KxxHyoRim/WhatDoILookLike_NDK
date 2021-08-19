@@ -522,8 +522,6 @@ public class ResultActivity extends AppCompatActivity {
 
         Log.e("isFaceRecognized", "얼굴 있음");
 
-
-
         animal_result_TV.setText(animal_result[ani1]);
         aniTV1.setText(animal[ani1]);
         aniTV2.setText(animal[ani2]);
