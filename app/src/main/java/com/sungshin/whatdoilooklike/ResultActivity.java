@@ -34,7 +34,7 @@ public class ResultActivity extends AppCompatActivity {
 
     private File tempFile;
     private ImageView imageview;
-    private Button galleryBtn;
+    private Button galleryBtn, cameraBtn;
     private Mat mat;
     private int case_code;
     static final int CASE_FROM_CAMERA = 0;
@@ -72,6 +72,7 @@ public class ResultActivity extends AppCompatActivity {
         animal_result_TV = (TextView)findViewById(R.id.animal_result_TV);
         imageview = (ImageView)findViewById(R.id.imageView);
         galleryBtn = (Button) findViewById(R.id.button);
+        cameraBtn = (Button) findViewById(R.id.buttonCamera);
         aniTV1 = (TextView) findViewById(R.id.aniTV1);
         aniTV2 = (TextView) findViewById(R.id.aniTV2);
         aniTV3 = (TextView) findViewById(R.id.aniTV3);
@@ -162,6 +163,16 @@ public class ResultActivity extends AppCompatActivity {
                 intent.setType(MediaStore.Images.Media.CONTENT_TYPE);
                 case_code = CASE_FROM_GALLERY;
                 startActivityForResult(intent, 1);
+            }
+        });
+
+
+        cameraBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(ResultActivity.this, LoadCameraActivity.class);
+                startActivity(intent);
+                finish();
             }
         });
     }
