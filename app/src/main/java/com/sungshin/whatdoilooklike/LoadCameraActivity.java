@@ -286,8 +286,7 @@ public class LoadCameraActivity extends AppCompatActivity implements CameraBridg
 //
 //            int animal_category = msg.what / 2;
 
-            textView.setText("result : " + animal[msg.what]);
-//            textView.setText("result : " + animal[animal_category]);
+            textView.setText(animal[msg.what]);
 
         }
     }
