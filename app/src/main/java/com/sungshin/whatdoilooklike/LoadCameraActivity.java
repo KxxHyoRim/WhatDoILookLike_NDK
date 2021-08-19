@@ -101,6 +101,7 @@ public class LoadCameraActivity extends AppCompatActivity implements CameraBridg
     private final int ETC =  8;
 
     float[] animal_rate = new float[8];
+    float[] celebrity_rate = new float[16];
 
     static private final String[] celebrity = {"황민현", "소희", "박보영", "백현","나연","박지훈",
             "주지훈","제니","김우빈","천우희","안재홍","라미란","최시원","하주연","진","이정은","결과없음"};
@@ -433,7 +434,7 @@ public class LoadCameraActivity extends AppCompatActivity implements CameraBridg
             Log.e(TAG, "Create Intent");
             intent.putExtra("Image", imgAddress);
             intent.putExtra("animal_rate", animal_rate);
-            intent.putExtra("output", output);
+            intent.putExtra("celebrity_rate", celebrity_rate);
             intent.putExtra("celebrity", celebrity);
             intent.putExtra("animal", animal);
             intent.putExtra("case_code", CASE_FROM_CAMERA);
@@ -493,6 +494,12 @@ public class LoadCameraActivity extends AppCompatActivity implements CameraBridg
 //                out = i;
 //            }
 //        }
+
+        celebrity_rate = new float[16];
+
+        for (int i = 0 ; i < 16; i++){
+            celebrity_rate[i] = output[0][i];
+        }
 
         // 닮은꼴 동물 찾기
 

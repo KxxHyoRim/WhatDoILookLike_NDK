@@ -37,6 +37,10 @@ public class ResultActivity extends AppCompatActivity {
     static final int CASE_FROM_CAMERA = 0;
     static final int CASE_FROM_GALLERY = 1;
     private static final String TAG = "ResultActivity:";
+    private float animal_rate[];
+    private float celebrity_rate[];
+    private String celebrity[];
+    private String animal[];
 
     static {
         System.loadLibrary("opencv_java4");
@@ -51,9 +55,36 @@ public class ResultActivity extends AppCompatActivity {
         imageview = (ImageView)findViewById(R.id.imageView);
         galleryBtn = (Button) findViewById(R.id.button);
 
+        animal_rate = new float[8];
+        celebrity_rate = new float[16];
+        animal = new String[8];
+        celebrity = new String[16];
+
         Intent intent = getIntent();
         case_code = intent.getIntExtra("case_code", 0);
-        Log.e(TAG, "case_code" + case_code);
+        animal_rate = intent.getFloatArrayExtra("animal_rate");
+        celebrity_rate = intent.getFloatArrayExtra("celebrity_rate");
+        animal = intent.getStringArrayExtra("animal");
+        celebrity = intent.getStringArrayExtra("celebrity");
+
+        int ani1 = find_max_idx(animal_rate);
+        float ani1_rate = animal_rate[ani1];
+        Log.e("Animal Rate::", animal[ani1]);
+        Log.e("Animal Rate:: ", String.valueOf(ani1_rate * 100));
+        animal_rate[ani1] = 0;
+
+        int ani2 = find_max_idx(animal_rate);
+        int ani2_rate = (int) animal_rate[ani2];
+        Log.e("Animal Rate::", animal[ani2]);
+        Log.e("Animal Rate:: ", String.valueOf(ani2_rate * 100));
+        animal_rate[ani2] = 0;
+
+
+        int ani3 = find_max_idx(animal_rate);
+        int ani3_rate = (int) animal_rate[ani3];
+        Log.e("Animal Rate::", animal[ani3]);
+        Log.e("Animal Rate:: ", String.valueOf(ani3_rate * 100));
+        animal_rate[ani3] = 0;
 
 
         if (case_code == CASE_FROM_CAMERA){
@@ -115,6 +146,22 @@ public class ResultActivity extends AppCompatActivity {
             }
         });
     }
+
+    private int find_max_idx(float[] animal_rate){
+
+        float max = 0;
+        int maxIdx = 0;
+
+        for (int i = 0 ; i < animal_rate.length; i++){
+            if (animal_rate[i] > max) {
+                max = animal_rate[i];
+                maxIdx = i;
+            }
+        }
+
+        return maxIdx;
+    }
+
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
