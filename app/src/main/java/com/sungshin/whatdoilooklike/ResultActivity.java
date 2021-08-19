@@ -118,53 +118,8 @@ public class ResultActivity extends AppCompatActivity {
 
 
 
-            if (isFaceRecognized == 0){
-
-                Log.e("isFaceRecognized", "얼굴 없음");
-                animal_result_TV.setText("얼굴을 찾지 못했어요:(");
-                aniTV1.setVisibility(View.INVISIBLE);
-                aniTV2.setVisibility(View.INVISIBLE);
-                aniTV3.setVisibility(View.INVISIBLE);
-                aniPB1.setVisibility(View.INVISIBLE);
-                aniPB2.setVisibility(View.INVISIBLE);
-                aniPB3.setVisibility(View.INVISIBLE);
-                aniPERC1.setVisibility(View.INVISIBLE);
-                aniPERC2.setVisibility(View.INVISIBLE);
-                aniPERC3.setVisibility(View.INVISIBLE);
-
-            } else {
-                Log.e("isFaceRecognized", "얼굴 있음");
-
-                int ani1 = find_max_idx();
-                int ani1_rate = (int) (animal_rate[ani1] * 100);
-                Log.e("Animal Rate::", animal[ani1]);
-                Log.e("Animal Rate:: ", String.valueOf(ani1_rate));
-                animal_rate[ani1] = 0;
-
-                int ani2 = find_max_idx();
-                int ani2_rate =(int)   (animal_rate[ani2] * 100);
-                Log.e("Animal Rate::", animal[ani2]);
-                Log.e("Animal Rate:: ", String.valueOf(ani2_rate ));
-                animal_rate[ani2] = 0;
-
-
-                int ani3 = find_max_idx();
-                int ani3_rate =(int) (animal_rate[ani3] * 100);
-                Log.e("Animal Rate::", animal[ani3]);
-                Log.e("Animal Rate:: ", String.valueOf(ani3_rate));
-                animal_rate[ani3] = 0;
-
-                animal_result_TV.setText(animal_result[ani1]);
-                aniTV1.setText(animal[ani1]);
-                aniTV2.setText(animal[ani2]);
-                aniTV3.setText(animal[ani3]);
-                aniPB1.setProgress(ani1_rate);
-                aniPB2.setProgress(ani2_rate);
-                aniPB3.setProgress(ani3_rate);
-                aniPERC1.setText(ani1_rate + "%");
-                aniPERC2.setText(ani2_rate + "%");
-                aniPERC3.setText(ani3_rate + "%");
-            }
+            if (isFaceRecognized == 0){  markAsNoFace(); }
+            if (isFaceRecognized == 1){  markFaceExist(); }
 
 
         }
@@ -261,6 +216,57 @@ public class ResultActivity extends AppCompatActivity {
                 imageview.setImageBitmap(bitmap);
             }
         }
+    }
+
+    private void markAsNoFace(){
+
+        Log.e("isFaceRecognized", "얼굴 없음");
+        animal_result_TV.setText("얼굴을 찾지 못했어요:(");
+        aniTV1.setVisibility(View.INVISIBLE);
+        aniTV2.setVisibility(View.INVISIBLE);
+        aniTV3.setVisibility(View.INVISIBLE);
+        aniPB1.setVisibility(View.INVISIBLE);
+        aniPB2.setVisibility(View.INVISIBLE);
+        aniPB3.setVisibility(View.INVISIBLE);
+        aniPERC1.setVisibility(View.INVISIBLE);
+        aniPERC2.setVisibility(View.INVISIBLE);
+        aniPERC3.setVisibility(View.INVISIBLE);
+
+    }
+
+    private void markFaceExist(){
+
+        Log.e("isFaceRecognized", "얼굴 있음");
+
+        int ani1 = find_max_idx();
+        int ani1_rate = (int) (animal_rate[ani1] * 100);
+        Log.e("Animal Rate::", animal[ani1]);
+        Log.e("Animal Rate:: ", String.valueOf(ani1_rate));
+        animal_rate[ani1] = 0;
+
+        int ani2 = find_max_idx();
+        int ani2_rate =(int)   (animal_rate[ani2] * 100);
+        Log.e("Animal Rate::", animal[ani2]);
+        Log.e("Animal Rate:: ", String.valueOf(ani2_rate ));
+        animal_rate[ani2] = 0;
+
+
+        int ani3 = find_max_idx();
+        int ani3_rate =(int) (animal_rate[ani3] * 100);
+        Log.e("Animal Rate::", animal[ani3]);
+        Log.e("Animal Rate:: ", String.valueOf(ani3_rate));
+        animal_rate[ani3] = 0;
+
+        animal_result_TV.setText(animal_result[ani1]);
+        aniTV1.setText(animal[ani1]);
+        aniTV2.setText(animal[ani2]);
+        aniTV3.setText(animal[ani3]);
+        aniPB1.setProgress(ani1_rate);
+        aniPB2.setProgress(ani2_rate);
+        aniPB3.setProgress(ani3_rate);
+        aniPERC1.setText(ani1_rate + "%");
+        aniPERC2.setText(ani2_rate + "%");
+        aniPERC3.setText(ani3_rate + "%");
     }
 
     private String getRealPathFromURI(Uri contentURI) {
