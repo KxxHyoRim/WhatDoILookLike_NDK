@@ -182,6 +182,14 @@
 
             </LinearLayout>
 
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="닮은꼴 연예인 여기 넣어줘 혜원아"
+                android:textColor="@color/black"
+                android:fontFamily="@font/nanum_squre_regular"
+                />
+
 
 
         </LinearLayout>
@@ -193,18 +201,18 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
-        android:paddingLeft="10dp"
-        android:paddingRight="10dp"
+        android:paddingLeft="15dp"
+        android:paddingRight="15dp"
+        android:paddingBottom="25dp"
         android:orientation="vertical">
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="다시 검사하기 ↓ "
-            android:textStyle="bold"
             android:textColor="@color/black"
             android:fontFamily="@font/crayon"
-            android:textSize="25dp"
+            android:textSize="15dp"
             android:layout_marginLeft="5dp"/>
 
         <LinearLayout
@@ -223,7 +231,7 @@
                 android:backgroundTint="#FFE79B"
                 android:textColor="@color/black"
                 android:fontFamily="@font/crayon"
-                android:textSize="25dp"
+                android:textSize="15dp"
                 android:text="카메라" />
 
             <Button
@@ -234,7 +242,7 @@
                 android:backgroundTint="#FFE79B"
                 android:textColor="@color/black"
                 android:fontFamily="@font/crayon"
-                android:textSize="25dp"
+                android:textSize="15dp"
                 android:text="갤러리" />
 
 
