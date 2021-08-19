@@ -15,6 +15,8 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.res.AssetFileDescriptor;
 import android.content.res.AssetManager;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
@@ -37,6 +39,7 @@ import org.opencv.android.BaseLoaderCallback;
 import org.opencv.android.CameraBridgeViewBase;
 import org.opencv.android.LoaderCallbackInterface;
 import org.opencv.android.OpenCVLoader;
+import org.opencv.android.Utils;
 import org.opencv.core.Core;
 import org.opencv.core.CvType;
 import org.opencv.core.Mat;
@@ -72,6 +75,7 @@ public class LoadCameraActivity extends AppCompatActivity implements CameraBridg
     private Mat mRgba;
     private Mat mGray;
     private Mat inputMat;
+    private facialDetection facialDetection;
 //    private Mat mRotate;
 //    private Mat rotateInputMat;
 
@@ -114,6 +118,57 @@ public class LoadCameraActivity extends AppCompatActivity implements CameraBridg
     public native void detect(long cascadeClassifier_face, long matAddrInput, long matAddrResult, long nativeObjAddr);
     public long cascadeClassifier_face=0;
 
+    private Mat[] animalImg = new Mat[8];
+    private int animalIdx = 0;
+    private int[][][] animalROI = {
+            {   // cat
+                    {114, 188, 54, 19},
+                    {83, 113, 35, 35},
+                    {157, 109, 35, 35}
+            },
+
+            {   // dog
+                    {24, 197, 111, 40},
+                    {28, 92, 28, 28},
+                    {126, 106, 28, 28}
+            },
+
+            {   // rabbit
+                    {114, 188, 54, 19},
+                    {83, 113, 35, 35},
+                    {157, 109, 35, 35}
+            },
+
+            {   // fox
+                    {66, 180, 40, 15},
+                    {51, 110, 25, 25},
+                    {111, 111, 25, 25}
+            },
+
+            {   // dino
+                    {27, 131, 128, 84},
+                    {26, 52, 28, 28},
+                    {125, 48, 28, 28}
+            },
+
+            {   // bear
+                    {118, 181, 50, 20},
+                    {79, 105, 28, 28},
+                    {144, 95, 28, 28}
+            },
+
+            {   // horse
+                    {13, 226, 37, 14},
+                    {22, 100, 25, 25},
+                    {86, 98, 25, 25}
+            },
+
+            {   // quokka
+                    {80, 131, 61, 41},
+                    {45, 68, 20, 20},
+                    {118, 53, 20, 20}
+            }
+    };
 
     /** 전면카메라로 시작
      *  후면카메라로 시작하고 싶을 시 상단의 mCameraId = 0으로 설정하면됨 */
@@ -213,6 +268,15 @@ public class LoadCameraActivity extends AppCompatActivity implements CameraBridg
                 }
             }
         });
+
+        try{
+            int inputSize=150;
+            facialDetection=new facialDetection(getAssets(),LoadCameraActivity.this,
+                    "landMark.tflite",inputSize);
+        }
+        catch (IOException e){
+            e.printStackTrace();
+        }
     }
 
     private static class MsgHandler extends Handler {
@@ -306,8 +370,12 @@ public class LoadCameraActivity extends AppCompatActivity implements CameraBridg
 //        // 변형
 //        detect(cascadeClassifier_face, mRotate.getNativeObjAddr(), mRotate.getNativeObjAddr(), rotateInputMat.getNativeObjAddr());
         take_image = take_picture_function_rgb(take_image, mRgba, inputMat);
-
-        return mRgba;
+        Mat out=new Mat();
+        // Imgproc.cvtColor(mRgba,mRgba,Imgproc.COLOR_RGBA2RGB);
+        out=facialDetection.recognizeImage(mRgba, animalImg[animalIdx], animalROI[animalIdx]);
+        // Display out Mat image
+        return out;
+//        return mRgba;
     }
 
     private void copyFile(String filename) {
