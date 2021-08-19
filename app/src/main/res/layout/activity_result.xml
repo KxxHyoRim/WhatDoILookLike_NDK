@@ -182,34 +182,14 @@
 
             </LinearLayout>
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textSize="14dp"
-                android:textStyle="bold"
-                android:layout_marginTop="30dp"
-                android:layout_gravity="center_horizontal"
-                android:text="나랑 가장 닮은 연예인은?"
-                android:textColor="@color/black"
-                android:fontFamily="@font/nanum_squre_regular" />
 
-            <TextView
-                android:id="@+id/celeb_most"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textSize="12dp"
-                android:textStyle="bold"
-                android:layout_marginTop="10dp"
-                android:layout_gravity="center_horizontal"
-                android:text="닮은꼴 연예인 리스트"
-                android:textColor="@color/black"
-                android:fontFamily="@font/nanum_squre_regular"/>
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textSize="14dp"
                 android:textStyle="bold"
+                android:id="@+id/celeb"
                 android:layout_marginTop="30dp"
                 android:layout_gravity="center_horizontal"
                 android:text="나와 닮은 연예인은?"
