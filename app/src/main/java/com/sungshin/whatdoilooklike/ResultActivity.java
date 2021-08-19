@@ -67,21 +67,21 @@ public class ResultActivity extends AppCompatActivity {
         animal = intent.getStringArrayExtra("animal");
         celebrity = intent.getStringArrayExtra("celebrity");
 
-        int ani1 = find_max_idx(animal_rate);
+        int ani1 = find_max_idx();
         float ani1_rate = animal_rate[ani1];
         Log.e("Animal Rate::", animal[ani1]);
         Log.e("Animal Rate:: ", String.valueOf(ani1_rate * 100));
         animal_rate[ani1] = 0;
 
-        int ani2 = find_max_idx(animal_rate);
-        int ani2_rate = (int) animal_rate[ani2];
+        int ani2 = find_max_idx();
+        float ani2_rate =  animal_rate[ani2];
         Log.e("Animal Rate::", animal[ani2]);
         Log.e("Animal Rate:: ", String.valueOf(ani2_rate * 100));
         animal_rate[ani2] = 0;
 
 
-        int ani3 = find_max_idx(animal_rate);
-        int ani3_rate = (int) animal_rate[ani3];
+        int ani3 = find_max_idx();
+        float ani3_rate = animal_rate[ani3];
         Log.e("Animal Rate::", animal[ani3]);
         Log.e("Animal Rate:: ", String.valueOf(ani3_rate * 100));
         animal_rate[ani3] = 0;
@@ -147,7 +147,7 @@ public class ResultActivity extends AppCompatActivity {
         });
     }
 
-    private int find_max_idx(float[] animal_rate){
+    private int find_max_idx(){
 
         float max = 0;
         int maxIdx = 0;
