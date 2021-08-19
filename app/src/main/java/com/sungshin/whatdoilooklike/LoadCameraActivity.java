@@ -110,8 +110,9 @@ public class LoadCameraActivity extends AppCompatActivity implements CameraBridg
     static private final String[] celebrity = {"황민현", "소희", "박보영", "백현","나연","박지훈",
             "주지훈","제니","김우빈","천우희","안재홍","라미란","최시원","하주연","진","이정은","결과없음"};
 
-    static private final String[] animal = {"cat", "dog", "rabbit",  "fox", "dinosaur", "bear", "horse", "quokka","결과없음"};
+    static private final String[] animal = {"고양이상", "강아지상", "토끼상",  "여우상", "공룡상", "곰상", "말상", "쿼카상","결과없음"};
     private int temp_idx = 8;
+    private int isFaceRecognized = 0;
 
     public native long loadCascade(String cascadeFileName);
     public native long loadCascade(String fileName, String cascadeFileName);
@@ -439,15 +440,18 @@ public class LoadCameraActivity extends AppCompatActivity implements CameraBridg
         Core.flip(mRgba.t(), save_mat, 1);
 
         // convert image from RGBA to BGRA
-        Imgproc.cvtColor(save_mat, save_mat, Imgproc.COLOR_RGBA2BGRA);
+//        Imgproc.cvtColor(save_mat, save_mat, Imgproc.COLOR_RGBA2BGRA);
 
 
         if(input.empty()){
             Log.e(TAG, "얼굴 검출이 되지 않음!");
+//            isFaceRecognized = 0;
 //            msg.what = ETC;
         }
         else{
             Message msg = handler.obtainMessage();
+
+            isFaceRecognized = 1;
 
             int result = doInference(input);
             Log.e(TAG,"Result After DoInference = " + result );
@@ -506,6 +510,7 @@ public class LoadCameraActivity extends AppCompatActivity implements CameraBridg
             intent.putExtra("celebrity", celebrity);
             intent.putExtra("animal", animal);
             intent.putExtra("case_code", CASE_FROM_CAMERA);
+            intent.putExtra("isFaceRecognized", isFaceRecognized);
             startActivity(intent);
             finish();
 

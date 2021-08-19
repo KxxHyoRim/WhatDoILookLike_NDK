@@ -13,6 +13,9 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -41,6 +44,20 @@ public class ResultActivity extends AppCompatActivity {
     private float celebrity_rate[];
     private String celebrity[];
     private String animal[];
+    protected TextView animal_result_TV;
+    protected TextView aniTV1;
+    protected TextView aniTV2;
+    protected TextView aniTV3;
+    protected ProgressBar aniPB1;
+    protected ProgressBar aniPB2;
+    protected ProgressBar aniPB3;
+    protected TextView aniPERC1;
+    protected TextView aniPERC2;
+    protected TextView aniPERC3;
+    private int isFaceRecognized;
+    private String animal_result[] = {"시크도도 고양이상", "귀염뽀짝 강아지상",
+            "말괄량이 토끼상", "매혹덩어리 여우상", "크와아앙 공룡상", "포근하고 듬직한 곰상",
+    "이국적인 매력의 말상", "세상 행복한 쿼카상"};
 
     static {
         System.loadLibrary("opencv_java4");
@@ -52,8 +69,19 @@ public class ResultActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_result);
 
+        animal_result_TV = (TextView)findViewById(R.id.animal_result_TV);
         imageview = (ImageView)findViewById(R.id.imageView);
         galleryBtn = (Button) findViewById(R.id.button);
+        aniTV1 = (TextView) findViewById(R.id.aniTV1);
+        aniTV2 = (TextView) findViewById(R.id.aniTV2);
+        aniTV3 = (TextView) findViewById(R.id.aniTV3);
+        aniPB1 = (ProgressBar) findViewById(R.id.aniPB1);
+        aniPB2 = (ProgressBar) findViewById(R.id.aniPB2);
+        aniPB3 = (ProgressBar) findViewById(R.id.aniPB3);
+        aniPERC1 = (TextView) findViewById(R.id.aniPERC1);
+        aniPERC2 = (TextView) findViewById(R.id.aniPERC2);
+        aniPERC3 = (TextView) findViewById(R.id.aniPERC3);
+
 
         animal_rate = new float[8];
         celebrity_rate = new float[16];
@@ -64,36 +92,20 @@ public class ResultActivity extends AppCompatActivity {
         case_code = intent.getIntExtra("case_code", 0);
 
 
+
         if (case_code == CASE_FROM_CAMERA){
-
-            animal_rate = intent.getFloatArrayExtra("animal_rate");
-            celebrity_rate = intent.getFloatArrayExtra("celebrity_rate");
-            animal = intent.getStringArrayExtra("animal");
-            celebrity = intent.getStringArrayExtra("celebrity");
-
-            int ani1 = find_max_idx();
-            int ani1_rate = (int) (animal_rate[ani1] * 100);
-            Log.e("Animal Rate::", animal[ani1]);
-            Log.e("Animal Rate:: ", String.valueOf(ani1_rate));
-            animal_rate[ani1] = 0;
-
-            int ani2 = find_max_idx();
-            int ani2_rate =(int)   (animal_rate[ani2] * 100);
-            Log.e("Animal Rate::", animal[ani2]);
-            Log.e("Animal Rate:: ", String.valueOf(ani2_rate ));
-            animal_rate[ani2] = 0;
-
-
-            int ani3 = find_max_idx();
-            int ani3_rate =(int) (animal_rate[ani3] * 100);
-            Log.e("Animal Rate::", animal[ani3]);
-            Log.e("Animal Rate:: ", String.valueOf(ani3_rate));
-            animal_rate[ani3] = 0;
 
 
             Log.e(TAG, "Case_from_Camera");
 
             // get Data from Intent
+            animal_rate = intent.getFloatArrayExtra("animal_rate");
+            celebrity_rate = intent.getFloatArrayExtra("celebrity_rate");
+            animal = intent.getStringArrayExtra("animal");
+            celebrity = intent.getStringArrayExtra("celebrity");
+            isFaceRecognized = intent.getIntExtra("isFaceRecognized", 0);
+
+            // get Image from Intent
             long addr = intent.getLongExtra("Image", 0);
             Mat tempImg = new Mat(addr);
             Mat img = tempImg.clone();
@@ -103,6 +115,56 @@ public class ResultActivity extends AppCompatActivity {
             bitmap = Bitmap.createBitmap(img.cols(), img.rows(), Bitmap.Config.ARGB_8888);
             Utils.matToBitmap(img, bitmap);
             imageview.setImageBitmap(bitmap);
+
+
+
+            if (isFaceRecognized == 0){
+
+                Log.e("isFaceRecognized", "얼굴 없음");
+                animal_result_TV.setText("얼굴을 찾지 못했어요:(");
+                aniTV1.setVisibility(View.INVISIBLE);
+                aniTV2.setVisibility(View.INVISIBLE);
+                aniTV3.setVisibility(View.INVISIBLE);
+                aniPB1.setVisibility(View.INVISIBLE);
+                aniPB2.setVisibility(View.INVISIBLE);
+                aniPB3.setVisibility(View.INVISIBLE);
+                aniPERC1.setVisibility(View.INVISIBLE);
+                aniPERC2.setVisibility(View.INVISIBLE);
+                aniPERC3.setVisibility(View.INVISIBLE);
+
+            } else {
+                Log.e("isFaceRecognized", "얼굴 있음");
+
+                int ani1 = find_max_idx();
+                int ani1_rate = (int) (animal_rate[ani1] * 100);
+                Log.e("Animal Rate::", animal[ani1]);
+                Log.e("Animal Rate:: ", String.valueOf(ani1_rate));
+                animal_rate[ani1] = 0;
+
+                int ani2 = find_max_idx();
+                int ani2_rate =(int)   (animal_rate[ani2] * 100);
+                Log.e("Animal Rate::", animal[ani2]);
+                Log.e("Animal Rate:: ", String.valueOf(ani2_rate ));
+                animal_rate[ani2] = 0;
+
+
+                int ani3 = find_max_idx();
+                int ani3_rate =(int) (animal_rate[ani3] * 100);
+                Log.e("Animal Rate::", animal[ani3]);
+                Log.e("Animal Rate:: ", String.valueOf(ani3_rate));
+                animal_rate[ani3] = 0;
+
+                animal_result_TV.setText(animal_result[ani1]);
+                aniTV1.setText(animal[ani1]);
+                aniTV2.setText(animal[ani2]);
+                aniTV3.setText(animal[ani3]);
+                aniPB1.setProgress(ani1_rate);
+                aniPB2.setProgress(ani2_rate);
+                aniPB3.setProgress(ani3_rate);
+                aniPERC1.setText(ani1_rate + "%");
+                aniPERC2.setText(ani2_rate + "%");
+                aniPERC3.setText(ani3_rate + "%");
+            }
 
 
         }

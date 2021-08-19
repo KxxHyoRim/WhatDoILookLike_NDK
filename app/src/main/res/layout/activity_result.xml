@@ -26,6 +26,7 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:id="@+id/animal_result_TV"
             android:text="시크한 매력쟁이 고양이상"
             android:textSize="15dp"
             android:fontFamily="@font/nanum_squre_regular"
