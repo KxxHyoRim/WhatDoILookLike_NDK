@@ -372,6 +372,7 @@ public class facialDetection {
                 x2=x2+20;
             int w1 = x2-x1;
             int h1 = y2-y1;
+            Imgproc.rectangle(mat_image,faceArray[i].tl(),faceArray[i].br(),new Scalar(0,255,0,255),2);
 
             Rect face_roi = new Rect(x1, y1, w1, h1);
             //crop(face_roi,mat_image.getNativeObjAddr(),LoadCameraActivity.inputMat.getNativeObjAddr());
@@ -405,8 +406,9 @@ public class facialDetection {
             // predict
 
             interpreter.run(byteBuffer,result);
-
-            for (int j=0;j<136;j=j+2){
+            float x_scale=((float)c_width)/((float)INPUT_SIZE);
+            float y_scale=((float)c_height)/((float)INPUT_SIZE); // or you can divide it with INPUT_SIZE
+            for (int j=72;j<84;j=j+2){
                 // now define x,y co-ordinate
                 // every even value is x co-ordinate
                 // every odd value is y co-ordinate
@@ -419,14 +421,49 @@ public class facialDetection {
                 // draw on cropped_rgb not on cropped
                 //              input/output     center                                  radius        color                fill circle
 
-                Imgproc.circle(resizeImage,new Point((x_val),(y_val)),1,new Scalar(0,255,0,255),-1);
+                Imgproc.circle(cropped_rgba,new Point((x_val*1.07-4)*x_scale,(y_val-6)*y_scale),3,new Scalar(0,255,0,255),-1);
+                //Imgproc.circle(cropped_rgba,new Point(x_val*x_scale,y_val*y_scale),3,new Scalar(0,255,0,255),-1);
+                //Imgproc.circle(cropped_rgba,new Point((x_val)*x_scale,(y_val)*y_scale),3,new Scalar(0,255,0,255),-1);
 
+            }
+            for (int j=84;j<96;j=j+2){
+                // now define x,y co-ordinate
+                // every even value is x co-ordinate
+                // every odd value is y co-ordinate
+                float x_val=(float)Array.get(Array.get(result,0),j);
+                float y_val=(float)Array.get(Array.get(result,0),j+1);
+                //Log.e("FacialDetector", "x" + String.valueOf(x_val));
+                //Log.e("FacialDetector", "y" + String.valueOf(y_val));
+
+                // draw circle around x,y
+                // draw on cropped_rgb not on cropped
+                //              input/output     center                                  radius        color                fill circle
+
+                Imgproc.circle(cropped_rgba,new Point((x_val*1.07+1.5)*x_scale,(y_val-6)*y_scale),3,new Scalar(0,255,0,255),-1);
+                //Imgproc.circle(cropped_rgba,new Point(x_val*x_scale,y_val*y_scale),3,new Scalar(0,255,0,255),-1);
+                //Imgproc.circle(cropped_rgba,new Point((x_val)*x_scale,(y_val)*y_scale),3,new Scalar(0,255,0,255),-1);
+
+            }
+            for (int j=96;j<136;j=j+2){
+                // now define x,y co-ordinate
+                // every even value is x co-ordinate
+                // every odd value is y co-ordinate
+                float x_val=(float)Array.get(Array.get(result,0),j);
+                float y_val=(float)Array.get(Array.get(result,0),j+1);
+                //Log.e("FacialDetector", "x" + String.valueOf(x_val));
+                //Log.e("FacialDetector", "y" + String.valueOf(y_val));
+
+                // draw circle around x,y
+                // draw on cropped_rgb not on cropped
+                //              input/output     center                                  radius        color                fill circle
+
+                Imgproc.circle(cropped_rgba,new Point((x_val)*x_scale,(y_val+2.5)*y_scale),3,new Scalar(0,255,0,255),-1);
+                //Imgproc.circle(cropped_rgba,new Point(x_val*x_scale,y_val*y_scale),3,new Scalar(0,255,0,255),-1);
                 //Imgproc.circle(cropped_rgba,new Point((x_val)*x_scale,(y_val)*y_scale),3,new Scalar(0,255,0,255),-1);
 
             }
 
-            Imgproc.resize(resizeImage, cropped_rgba, new Size(c_width, c_height), 0, 0, Imgproc.INTER_CUBIC);
-            Mat aa = new Mat();
+            //Imgproc.resize(resizeImage, cropped_rgba, new Size(c_width, c_height), 0, 0, Imgproc.INTER_CUBIC);
             cropped_rgba.copyTo(new Mat(mat_image,face_roi));
 
         }
