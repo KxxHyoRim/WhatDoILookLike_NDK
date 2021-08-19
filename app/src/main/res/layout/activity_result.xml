@@ -187,35 +187,61 @@
         </LinearLayout>
 
 
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:paddingLeft="10dp"
+        android:paddingRight="10dp"
+        android:orientation="vertical">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="다시 검사하기 ↓ "
+            android:textStyle="bold"
+            android:textColor="@color/black"
+            android:fontFamily="@font/crayon"
+            android:textSize="25dp"
+            android:layout_marginLeft="5dp"/>
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal">
+            android:orientation="horizontal"
+            android:layout_marginTop="10dp"
+            >
 
 
             <Button
-                android:layout_marginTop="30dp"
                 android:id="@+id/buttonCamera"
                 android:layout_width="0dp"
                 android:layout_weight="1"
                 android:layout_height="50dp"
-                android:backgroundTint="@color/yellow_main"
+                android:backgroundTint="#FFE79B"
+                android:textColor="@color/black"
+                android:fontFamily="@font/crayon"
+                android:textSize="25dp"
                 android:text="카메라" />
+
             <Button
-                android:layout_marginTop="30dp"
                 android:id="@+id/button"
                 android:layout_width="0dp"
                 android:layout_weight="1"
                 android:layout_height="50dp"
-                android:backgroundTint="@color/yellow_main"
+                android:backgroundTint="#FFE79B"
+                android:textColor="@color/black"
+                android:fontFamily="@font/crayon"
+                android:textSize="25dp"
                 android:text="갤러리" />
 
 
         </LinearLayout>
 
 
-
-
     </LinearLayout>
+
 
 </RelativeLayout>
