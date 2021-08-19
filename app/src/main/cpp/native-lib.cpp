@@ -37,30 +37,6 @@ Java_com_sungshin_whatdoilooklike_MainActivity_stringFromJNI(
     return env->NewStringUTF(hello.c_str());
 }
 
-extern "C"
-JNIEXPORT jlong JNICALL
-Java_com_sungshin_whatdoilooklike_LoadCameraActivity_loadCascade(JNIEnv *env, jobject thiz, jstring cascade_file_name, jstring base_dir) {
-    // TODO: implement loadCascade()
-    const char *nativeFileNameString = env->GetStringUTFChars(cascade_file_name, 0);
-    const char *basePathDir = env->GetStringUTFChars(base_dir, 0);
-
-    string baseDir(basePathDir);
-    //baseDir.append(nativeFileNameString);
-    const char *pathDir = baseDir.c_str();
-
-    jlong ret = 0;
-    ret = (jlong) new CascadeClassifier(pathDir);
-    if (((CascadeClassifier *) ret)->empty()) {
-        __android_log_print(ANDROID_LOG_DEBUG, "native-lib :: ","CascadeClassifier로 로딩 실패  %s", pathDir);
-    }
-    else
-       __android_log_print(ANDROID_LOG_DEBUG, "native-lib :: ","CascadeClassifier로 로딩 성공 %s", pathDir);
-
-
-    env->ReleaseStringUTFChars(cascade_file_name, nativeFileNameString);
-
-    return ret;
-}
 
 extern "C"
 JNIEXPORT void JNICALL
@@ -120,4 +96,60 @@ Java_com_sungshin_whatdoilooklike_facialDetection_crop(JNIEnv *env, jobject thiz
 
     Rect bounds(0,0,img_input.cols,img_input.rows);
     img_crop = img_input( rect & bounds);
+}
+
+extern "C"
+JNIEXPORT jlong JNICALL
+Java_com_sungshin_whatdoilooklike_ResultActivity_loadCascade(JNIEnv *env, jobject thiz,
+                                                             jstring file_name,
+                                                             jstring cascade_file_name) {
+    // TODO: implement loadCascade()
+    // TODO: implement loadCascade()
+    const char *nativeFileNameString = env->GetStringUTFChars(file_name, 0);
+    const char *basePathDir = env->GetStringUTFChars(cascade_file_name, 0);
+
+    string baseDir(basePathDir);
+    //baseDir.append(nativeFileNameString);
+    const char *pathDir = baseDir.c_str();
+
+    jlong ret = 0;
+    ret = (jlong) new CascadeClassifier(pathDir);
+    if (((CascadeClassifier *) ret)->empty()) {
+        __android_log_print(ANDROID_LOG_DEBUG, "native-lib :: ","CascadeClassifier로 로딩 실패  %s", pathDir);
+    }
+    else
+        __android_log_print(ANDROID_LOG_DEBUG, "native-lib :: ","CascadeClassifier로 로딩 성공 %s", pathDir);
+
+
+    env->ReleaseStringUTFChars(cascade_file_name, nativeFileNameString);
+
+    return ret;
+}
+
+extern "C"
+JNIEXPORT jlong JNICALL
+Java_com_sungshin_whatdoilooklike_LoadCameraActivity_loadCascade_1camera(JNIEnv *env, jobject thiz,
+                                                                         jstring file_name,
+                                                                         jstring cascade_file_name) {
+    // TODO: implement loadCascade_camera()
+    // TODO: implement loadCascade()
+    const char *nativeFileNameString = env->GetStringUTFChars(file_name, 0);
+    const char *basePathDir = env->GetStringUTFChars(cascade_file_name, 0);
+
+    string baseDir(basePathDir);
+    //baseDir.append(nativeFileNameString);
+    const char *pathDir = baseDir.c_str();
+
+    jlong ret = 0;
+    ret = (jlong) new CascadeClassifier(pathDir);
+    if (((CascadeClassifier *) ret)->empty()) {
+        __android_log_print(ANDROID_LOG_DEBUG, "native-lib :: ","CascadeClassifier로 로딩 실패  %s", pathDir);
+    }
+    else
+        __android_log_print(ANDROID_LOG_DEBUG, "native-lib :: ","CascadeClassifier로 로딩 성공 %s", pathDir);
+
+
+    env->ReleaseStringUTFChars(cascade_file_name, nativeFileNameString);
+
+    return ret;
 }

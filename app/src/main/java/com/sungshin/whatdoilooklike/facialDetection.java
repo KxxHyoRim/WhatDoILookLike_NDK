@@ -142,7 +142,7 @@ public class facialDetection {
     }
 
     // Creata a new function input as Mat and output is also Mat format
-    public Mat recognizeImage(Mat mat_image, Mat animalImg, int[][] animalROI) {
+    public Mat recognizeImage(Mat mat_image, Mat animalImg, int[][] animalROI, int environment) {
         Log.e("FacialDetector","recognizeImage");
         // mat_image is not properly align it is 90 degree off
         // rotate mat_image by 90 degree
@@ -380,7 +380,12 @@ public class facialDetection {
             // cropped grayscale image
             // cropped rgba image
             Mat cropped_rgba=new Mat(mat_image,face_roi);
-            LoadCameraActivity.inputMat = cropped_rgba.clone();
+
+            //environmnet가 0이면 LoadCameraActivity, environment가 1이면 ResultActivity
+            if(environment==0)
+                LoadCameraActivity.inputMat = cropped_rgba.clone();
+            else if(environment==1)
+                ResultActivity.inputMat = cropped_rgba.clone();
             //Log.e("FacialDetector","370");
 
             Mat resizeImage = new Mat();

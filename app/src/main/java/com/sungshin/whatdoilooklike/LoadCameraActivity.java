@@ -114,9 +114,9 @@ public class LoadCameraActivity extends AppCompatActivity implements CameraBridg
     private int temp_idx = 8;
     private int isFaceRecognized = 0;
 
-    public native long loadCascade(String cascadeFileName);
-    public native long loadCascade(String fileName, String cascadeFileName);
-    public native void detect(long cascadeClassifier_face, long matAddrInput, long matAddrResult, long nativeObjAddr);
+    //public native long loadCascade_camera(String cascadeFileName);
+    public native long loadCascade_camera(String fileName, String cascadeFileName);
+    public static native void detect(long cascadeClassifier_face, long matAddrInput, long matAddrResult, long nativeObjAddr);
     public long cascadeClassifier_face=0;
 
     private Mat[] animalImg = new Mat[8];
@@ -370,7 +370,7 @@ public class LoadCameraActivity extends AppCompatActivity implements CameraBridg
 
         Mat out=new Mat();
         // Imgproc.cvtColor(mRgba,mRgba,Imgproc.COLOR_RGBA2RGB);
-        out = facialDetection.recognizeImage(mRgba, animalImg[animalIdx], animalROI[animalIdx]);
+        out = facialDetection.recognizeImage(mRgba, animalImg[animalIdx], animalROI[animalIdx],0);
 
         take_image = take_picture_function_rgb(take_image, mRgba, inputMat);
         // Display out Mat image
@@ -427,7 +427,7 @@ public class LoadCameraActivity extends AppCompatActivity implements CameraBridg
         Log.d(TAG,"Read_cascade_file");
 
         //loadCascade 메소드는 외부 저장소의 특정 위치에서 해당 파일을 읽어와서 CascadeClassifier 객체로 로드함
-        cascadeClassifier_face = loadCascade("haarcascade_frontalface_alt.xml",pathDir);
+        cascadeClassifier_face = loadCascade_camera("haarcascade_frontalface_alt.xml",pathDir);
         Log.d(TAG,"read_cascade_file:");
     }
 

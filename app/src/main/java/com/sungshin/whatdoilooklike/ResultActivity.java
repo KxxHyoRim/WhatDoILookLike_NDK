@@ -1,6 +1,8 @@
 package com.sungshin.whatdoilooklike;
 
+import android.app.Activity;
 import android.content.Intent;
+import android.content.res.AssetFileDescriptor;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -8,6 +10,7 @@ import android.graphics.Matrix;
 import android.media.ExifInterface;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Message;
 import android.provider.MediaStore;
 import android.util.Log;
 import android.view.View;
@@ -24,11 +27,17 @@ import androidx.appcompat.app.AppCompatActivity;
 import org.opencv.android.Utils;
 import org.opencv.core.Mat;
 import org.opencv.core.Size;
+import org.opencv.imgproc.Imgproc;
+import org.tensorflow.lite.Interpreter;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
+import java.nio.MappedByteBuffer;
+import java.nio.channels.FileChannel;
+import java.text.DecimalFormat;
 
 public class ResultActivity extends AppCompatActivity {
 
@@ -59,6 +68,67 @@ public class ResultActivity extends AppCompatActivity {
             "말괄량이 토끼상", "매혹덩어리 여우상", "크와아앙 공룡상", "포근하고 듬직한 곰상",
     "이국적인 매력의 말상", "세상 행복한 쿼카상"};
 
+    float[][][][] input;
+    float[][] output;
+    Interpreter interpreter;
+
+    private Mat[] animalImg = new Mat[8];
+    private int animalIdx = 0;
+    private int[][][] animalROI = {
+            {   // cat
+                    {114, 188, 54, 19},
+                    {83, 113, 35, 35},
+                    {157, 109, 35, 35}
+            },
+
+            {   // dog
+                    {24, 197, 111, 40},
+                    {28, 92, 28, 28},
+                    {126, 106, 28, 28}
+            },
+
+            {   // rabbit
+                    {114, 188, 54, 19},
+                    {83, 113, 35, 35},
+                    {157, 109, 35, 35}
+            },
+
+            {   // fox
+                    {66, 180, 40, 15},
+                    {51, 110, 25, 25},
+                    {111, 111, 25, 25}
+            },
+
+            {   // dino
+                    {27, 131, 128, 84},
+                    {26, 52, 28, 28},
+                    {125, 48, 28, 28}
+            },
+
+            {   // bear
+                    {118, 181, 50, 20},
+                    {79, 105, 28, 28},
+                    {144, 95, 28, 28}
+            },
+
+            {   // horse
+                    {13, 226, 37, 14},
+                    {22, 100, 25, 25},
+                    {86, 98, 25, 25}
+            },
+
+            {   // quokka
+                    {80, 131, 61, 41},
+                    {45, 68, 20, 20},
+                    {118, 53, 20, 20}
+            }
+    };
+
+    public native long loadCascade(String fileName, String cascadeFileName);
+    public long cascadeClassifier_face=0;
+    private facialDetection facialDetection;
+    public static Mat inputMat;
+
     static {
         System.loadLibrary("opencv_java4");
         System.loadLibrary("native-lib");
@@ -68,6 +138,8 @@ public class ResultActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_result);
+
+        interpreter = getTfliteInterpreter("converted_model2.tflite");
 
         animal_result_TV = (TextView)findViewById(R.id.animal_result_TV);
         imageview = (ImageView)findViewById(R.id.imageView);
@@ -91,10 +163,18 @@ public class ResultActivity extends AppCompatActivity {
         Intent intent = getIntent();
         case_code = intent.getIntExtra("case_code", 0);
 
+        try{
+            int inputSize=150;
+            facialDetection=new facialDetection(getAssets(),ResultActivity.this,
+                    "landMark.tflite",inputSize);
+        }
+        catch (IOException e){
+            e.printStackTrace();
+        }
+
 
 
         if (case_code == CASE_FROM_CAMERA){
-
 
             Log.e(TAG, "Case_from_Camera");
 
@@ -195,6 +275,42 @@ public class ResultActivity extends AppCompatActivity {
             //갤러리 이미지 Mat
             mat = new Mat();
             Utils.bitmapToMat(bitmap, mat);
+
+            //갤러리 이미지 Mat 모델 돌리기
+            inputMat = new Mat();
+            Mat out=new Mat();
+            // Imgproc.cvtColor(mRgba,mRgba,Imgproc.COLOR_RGBA2RGB);
+            out = facialDetection.recognizeImage(mat, animalImg[animalIdx], animalROI[animalIdx],1);
+
+            if(inputMat.empty()){
+                Log.e(TAG, "얼굴 검출이 되지 않음!");
+//            isFaceRecognized = 0;
+//            msg.what = ETC;
+            }
+            else{
+                isFaceRecognized = 1;
+                int result = doInference(inputMat);
+                Log.e(TAG,"Result After DoInference = " + result );
+                Log.e(TAG, "crop 후 input image 사이즈:" + inputMat.width() +" * " +inputMat.height());
+
+                /** Category 추가 방법
+                 * 1. celebrity 이름의 배열 수정 : 결과 없음은 마지막 인덱스로 지정
+                 * 2. 바로 아래의 else if 문 추가
+                 * */
+
+                //효림은 보아라 !!!!! 이 밑에 result 값이 그 결과 output 카테고리 !
+//                if(result == 0.0){  msg.what = ANI0 ; }
+//                else if(result == 1.0){ msg.what = ANI1 ;}
+//                else if(result == 2.0){ msg.what = ANI2 ;}
+//                else if(result == 3.0){ msg.what = ANI3 ;}
+//                else if(result == 4.0){ msg.what = ANI4 ;}
+//                else if(result == 5.0){ msg.what = ANI5 ;}
+//                else if(result == 6.0){ msg.what = ANI6 ;}
+//                else if(result == 7.0){ msg.what = ANI7 ;}
+
+            }
+
+            // Display out Mat image
             imageview.setImageBitmap(bitmap);
 
         }
@@ -209,6 +325,105 @@ public class ResultActivity extends AppCompatActivity {
                 startActivityForResult(intent, 1);
             }
         });
+    }
+
+    private Interpreter getTfliteInterpreter(String modelPath) {
+        try {
+            return new Interpreter(loadModelFile(this, modelPath));
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    private MappedByteBuffer loadModelFile(Activity activity, String modelPath) throws IOException {
+
+        AssetFileDescriptor fileDescriptor = activity.getAssets().openFd(modelPath);
+        FileInputStream inputStream = new FileInputStream(fileDescriptor.getFileDescriptor());
+        FileChannel fileChannel = inputStream.getChannel();
+        long startOffset = fileDescriptor.getStartOffset();
+        long declaredLength = fileDescriptor.getDeclaredLength();
+
+        return fileChannel.map(FileChannel.MapMode.READ_ONLY, startOffset, declaredLength);
+
+    }
+
+
+
+    private int doInference(Mat image){
+
+        input = new float[1][96][96][1];
+        output = new float[1][16];
+
+        Imgproc.resize(image, image, new Size(96, 96));
+
+        for(int i=0;i<image.rows();i++)
+            for(int j=0;j<image.cols();j++) {
+                double pixel = image.get(i,j)[0] * 0.299 + image.get(i,j)[1] * 0.587 + image.get(i,j)[2] * 0.114;
+                input[0][i][j][0] = (float) (pixel / 255.0);
+            }
+
+        /** DeepLearning Model 실행 */
+        interpreter.run(input, output);
+
+
+        // 닮은꼴 연예인 찾기
+//        int out = 0;        // index
+//        float out2 = 0;     // ratio
+//        for(int i=0;i<16;i++) {
+//            if (output[0][i] > out2) {
+//                out2 = output[0][i];
+//                out = i;
+//            }
+//        }
+
+//        celebrity_rate = new float[16];
+//
+//        for (int i = 0 ; i < 16; i++){
+//            celebrity_rate[i] = output[0][i];
+//        }
+//
+//        // 닮은꼴 동물 찾기
+//
+//        // 1) 배열 선언 및 초기화
+//        for (int i = 0 ; i < 8; i++){ animal_rate[i] = 0.0f; }
+//
+//        // 2) 동물별 비율 구하기
+//        for (int i = 0 ; i< 16; i++){
+//            animal_rate[i/2] += output[0][i];
+//        }
+//
+//        DecimalFormat df = new DecimalFormat("#.##");
+////        System.out.println("비율확인 HyoRim::========================================================");
+////        System.out.print("HyoRim:: ");
+////        for (int i = 0 ; i < 8; i++){
+////            System.out.print( animal[i] + ": " + df.format(animal_rate[i] )+ " ");
+////        }
+////        System.out.println();
+//
+//
+//        // 3) 가장 닮은 동물 찾기
+//        int maxIdx = 0;
+//        float maxVal = 0;
+//        for (int i = 0 ; i < 8; i++){
+//            if (animal_rate[i] > maxVal){
+//                maxVal = animal_rate[i];
+//                maxIdx = i;
+//            }
+//        }
+//
+//        // 닮은꼴 비율이 30프로가 넘을때만 return 할 변수의 값을 갱신
+//        // 그렇지 않다면 이전에 검출됐던 결과중 마지막으로 30을 넘은 경우를 return
+//        if(maxVal >= 0.3) {
+//            temp_idx = maxIdx;
+//            System.out.println("HyoRim:: "+  animal[temp_idx] + " (" + df.format(maxVal * 100) + "%)");
+//        }else {
+//            System.out.println("HyoRim:: " +  animal[temp_idx] + " X 30");
+//        }
+//
+//        return temp_idx;
+          return 1;
     }
 
     private int find_max_idx(){
@@ -257,7 +472,39 @@ public class ResultActivity extends AppCompatActivity {
 
                 //갤러리 이미지 Mat
                 Utils.bitmapToMat(bitmap, mat);
+                //갤러리 이미지 Mat 모델 돌리기
+                inputMat = new Mat();
+                Mat out=new Mat();
+                // Imgproc.cvtColor(mRgba,mRgba,Imgproc.COLOR_RGBA2RGB);
+                out = facialDetection.recognizeImage(mat, animalImg[animalIdx], animalROI[animalIdx],1);
 
+                if(inputMat.empty()){
+                    Log.e(TAG, "얼굴 검출이 되지 않음!");
+//            isFaceRecognized = 0;
+//            msg.what = ETC;
+                }
+                else{
+                    isFaceRecognized = 1;
+                    int result = doInference(inputMat);
+                    Log.e(TAG,"Result After DoInference = " + result );
+                    Log.e(TAG, "crop 후 input image 사이즈:" + inputMat.width() +" * " +inputMat.height());
+
+                    /** Category 추가 방법
+                     * 1. celebrity 이름의 배열 수정 : 결과 없음은 마지막 인덱스로 지정
+                     * 2. 바로 아래의 else if 문 추가
+                     * */
+
+                    //효림은 보아라 !!!!! 이 밑에 result 값이 그 결과 output 카테고리 !
+//                if(result == 0.0){  msg.what = ANI0 ; }
+//                else if(result == 1.0){ msg.what = ANI1 ;}
+//                else if(result == 2.0){ msg.what = ANI2 ;}
+//                else if(result == 3.0){ msg.what = ANI3 ;}
+//                else if(result == 4.0){ msg.what = ANI4 ;}
+//                else if(result == 5.0){ msg.what = ANI5 ;}
+//                else if(result == 6.0){ msg.what = ANI6 ;}
+//                else if(result == 7.0){ msg.what = ANI7 ;}
+
+                }
                 imageview.setImageBitmap(bitmap);
             }
         }
