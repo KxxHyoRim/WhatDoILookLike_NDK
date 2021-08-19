@@ -477,6 +477,7 @@ public class ResultActivity extends AppCompatActivity {
                 bitmap = rotateBitmap(bitmap, orientation);
 
                 //갤러리 이미지 Mat
+                mat = new Mat();
                 Utils.bitmapToMat(bitmap, mat);
                 //갤러리 이미지 Mat 모델 돌리기
                 inputMat = new Mat();
@@ -549,6 +550,7 @@ public class ResultActivity extends AppCompatActivity {
         aniPERC1.setText(ani1_rate + "%");
         aniPERC2.setText(ani2_rate + "%");
         aniPERC3.setText(ani3_rate + "%");
+        celeb_list.setText(celebrity_list[ani1]);
     }
 
     private String getRealPathFromURI(Uri contentURI) {
