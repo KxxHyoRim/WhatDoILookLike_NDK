@@ -19,11 +19,10 @@ AI가 분석해주는 동물상 안드로이드 앱 "너의 얼굴은"
 
 
 ### 데모 영상
+
+https://user-images.githubusercontent.com/59546818/132966489-78402f00-aa74-470e-a191-2fc98a70238a.mp4
+
 https://user-images.githubusercontent.com/59546818/132966322-9356775c-48a5-492b-bcd1-bb670c475d61.mp4
-
-
-https://user-images.githubusercontent.com/59546818/132966323-6bafdc48-9a4c-4fb8-83de-99ef4f8d7d59.mp4
-
 
 https://user-images.githubusercontent.com/59546818/132966325-ea15ecc7-cbd3-476c-a982-05e61dd50cb1.mp4
 
